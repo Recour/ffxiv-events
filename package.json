@@ -1,0 +1,28 @@
+{
+  "name": "ffxiv-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd backend && npm install && npx ts-node app.ts",
+    "frontend": "cd frontend && npm install && npm start",
+    "backend": "cd backend && npm install && nodemon app.ts",
+    "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\"",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Recour/ffxiv-events.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Recour/ffxiv-events/issues"
+  },
+  "homepage": "https://github.com/Recour/ffxiv-events#readme"
+}

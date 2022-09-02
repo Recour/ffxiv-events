@@ -1,0 +1,55 @@
+export const EVENT_TYPES = {
+  RAID: "Raid",
+  STATIC: "Static",
+  FC_EVENT: "FC Event",
+  BARD_PERFORMANCE: "Bard Performance",
+  ETERNAL_BONDING: "Eternal Bonding",
+  TREASURE_MAPS: "Treasure Maps",
+  HUNT_TRAIN: "Hunt Train",
+  FATE_PARTY: "Fate Party",
+  GLAMOUR_CONTEST: "Glamour Contest",
+  RP_VENUE: "RP Venue",
+  NIGHT_CLUB: "Night Club",
+  TAVERN: "Tavern",
+  RESTAURANT: "Restaurant",
+  CAFE: "Cafe",
+  LIBRARY: "Library",
+  AQUARIUM: "Aquarium"
+};
+
+export type EventType =
+  | typeof EVENT_TYPES.RAID
+  | typeof EVENT_TYPES.STATIC
+  | typeof EVENT_TYPES.FC_EVENT
+  | typeof EVENT_TYPES.BARD_PERFORMANCE
+  | typeof EVENT_TYPES.ETERNAL_BONDING
+  | typeof EVENT_TYPES.TREASURE_MAPS
+  | typeof EVENT_TYPES.HUNT_TRAIN
+  | typeof EVENT_TYPES.FATE_PARTY
+  | typeof EVENT_TYPES.GLAMOUR_CONTEST
+  | typeof EVENT_TYPES.RP_VENUE
+  | typeof EVENT_TYPES.NIGHT_CLUB
+  | typeof EVENT_TYPES.TAVERN
+  | typeof EVENT_TYPES.RESTAURANT
+  | typeof EVENT_TYPES.CAFE
+  | typeof EVENT_TYPES.LIBRARY
+  | typeof EVENT_TYPES.AQUARIUM;
+
+export const EVENT_TYPES_TO_ARTICLES = {
+  [EVENT_TYPES.RAID]: "a",
+  [EVENT_TYPES.STATIC]: "a",
+  [EVENT_TYPES.FC_EVENT]: "an",
+  [EVENT_TYPES.BARD_PERFORMANCE]: "a",
+  [EVENT_TYPES.ETERNAL_BONDING]: "an",
+  [EVENT_TYPES.TREASURE_MAPS]: "",
+  [EVENT_TYPES.HUNT_TRAIN]: "a",
+  [EVENT_TYPES.FATE_PARTY]: "a",
+  [EVENT_TYPES.GLAMOUR_CONTEST]: "a",
+  [EVENT_TYPES.RP_VENUE]: "an",
+  [EVENT_TYPES.NIGHT_CLUB]: "a",
+  [EVENT_TYPES.TAVERN]: "a",
+  [EVENT_TYPES.RESTAURANT]: "a",
+  [EVENT_TYPES.CAFE]: "a",
+  [EVENT_TYPES.LIBRARY]: "a",
+  [EVENT_TYPES.AQUARIUM]: "an"
+};

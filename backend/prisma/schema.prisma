@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_DATABASE_URL")
+  shadowDatabaseUrl = env("POSTGRES_SHADOW_DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  displayName String
+  photoUrl    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  events      Event[]   @relation("events")
+  attending   Event[]
+  comments    Comment[]
+}
+
+model Event {
+  id              Int         @id @default(autoincrement())
+  hostId          Int
+  name            String
+  type            String
+  server          String
+  map             String
+  ward            Int
+  plot            Int
+  startTime       DateTime
+  endTime         DateTime
+  comingSoon      Boolean     @default(false)
+  description     String
+  backgroundImage String?
+  website         String
+  video           String
+  minIlvl         Int
+  treasureMaps    String[]
+  adultOnly       Boolean
+  genres          String[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  host            User        @relation("events", fields: [hostId], references: [id])
+  recurrings      Recurring[]
+  guests          User[]
+  comments        Comment[]
+}
+
+model Recurring {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  dayOfWeek Int
+  startTime DateTime @db.Time()
+  endTime   DateTime @db.Time()
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+  Event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId   Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+}
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}

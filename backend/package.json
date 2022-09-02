@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@oauth-everything/passport-discord": "^1.0.2",
+    "@prisma/client": "^4.2.1",
+    "aws-sdk": "^2.1199.0",
+    "compression": "^1.7.4",
+    "connect-pg-simple": "^7.0.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "moment": "^2.29.4",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^2.0.0",
+    "passport": "^0.6.0",
+    "passport-google-oauth2": "^0.2.0",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.5",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^18.6.4",
+    "@types/passport": "^1.0.9",
+    "@types/passport-google-oauth2": "^0.1.5",
+    "prisma": "^4.2.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
