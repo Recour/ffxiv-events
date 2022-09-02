@@ -10,8 +10,8 @@ This repository hosts the FFXIV Events frontend and backend. Frontend code can b
 
 ## Running locally
 
-To run both the frontend and backend locally at the same time, run ```npm run dev``` in the root folder of the project.
-To run them separately, use ```npm run frontend``` and ```npm run backend``` in the root folder of the project.
+- To run both the frontend and backend locally at the same time, run ```npm run dev``` in the root folder of the project.
+- To run them separately, use ```npm run frontend``` and ```npm run backend``` in the root folder of the project.
 
 ## Contribution
 
