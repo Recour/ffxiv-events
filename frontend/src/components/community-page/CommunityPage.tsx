@@ -11,7 +11,7 @@ interface SocialMediaButton {
 const SOCIAL_MEDIA_BUTTONS: SocialMediaButton[] = [
   {
     label: "Discord",
-    src: "http://logo-logos.com/2018/03/Discord_icon.png",
+    src: "https://www.freepnglogos.com/uploads/discord-logo-png/concours-discord-cartes-voeux-fortnite-france-6.png",
     url: "https://discord.gg/WucSdT8VmS"
   },
   {
@@ -217,8 +217,8 @@ const CommunityPage = (communityPageProps: CommunityPageProps) => {
             }}
             fontSize="lg"
           >
-            FFXIV Events is going open source as of 1st September 2022.<br />
-            That means all of the code will be available on the web, and everyone will be able to contribute. More info soon.<br />
+            FFXIV Events is open source.<br />
+            Source code can be found on GitHub. Click on the GitHub logo to check it out.<br />
           </Text>
 
           {/* PRIVACY */}
