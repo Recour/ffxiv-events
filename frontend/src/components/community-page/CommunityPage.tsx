@@ -25,9 +25,9 @@ const SOCIAL_MEDIA_BUTTONS: SocialMediaButton[] = [
     url: "https://twitter.com/ffxiv_events"
   },
   {
-    label: "GitHub (Coming 1st September 2022)",
+    label: "GitHub",
     src: "https://cdn-icons-png.flaticon.com/512/25/25231.png",
-    url: ""
+    url: "https://github.com/Recour/ffxiv-events"
   }
 ];
 
@@ -93,7 +93,6 @@ const CommunityPage = (communityPageProps: CommunityPageProps) => {
                   height="100%"
                   aria-label={socialMediaButton.label}
                   onClick={() => window.open(socialMediaButton.url)}
-                  isDisabled={!socialMediaButton.url}
                 >
                   <Avatar
                     m={3}
