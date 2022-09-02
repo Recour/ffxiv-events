@@ -15,7 +15,7 @@ To run them separately, use ```npm run frontend``` and ```npm run backend``` in 
 
 ## Contribution
 
-Feel free to open a PR at any time.
+PRs will be reviewed by code owners
 
 ## License
 
