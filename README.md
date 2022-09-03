@@ -15,7 +15,7 @@ This repository hosts the FFXIV Events frontend and backend. Frontend code can b
 
 ## Contribution
 
-PRs are reviewed by code owners
+PRs are reviewed by code owners. For suggestions, please visit the Discord: https://discord.gg/WucSdT8VmS
 
 ## License
 
