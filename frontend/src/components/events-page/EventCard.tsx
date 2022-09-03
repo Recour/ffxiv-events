@@ -22,7 +22,6 @@ import { MdLocationOn } from "@react-icons/all-files/md/MdLocationOn";
 import { MdAccessTime } from "@react-icons/all-files/md/MdAccessTime";
 import { MdHelpOutline } from "@react-icons/all-files/md/MdHelpOutline";
 import { MdPublic } from "@react-icons/all-files/md/MdPublic";
-import { isIntegratedEvent } from "../../helpers/isIntegratedEvent";
 
 interface NewBadgeConstraints {
   amount: number;
@@ -44,7 +43,6 @@ const EventCard = (eventCardProps: EventCardProps) => {
 
   const isRecurring = event.recurrings.length;
   const isComingSoon = event.comingSoon;
-  const isIntegrated = isIntegratedEvent(event);
 
   const showLiveBadge = isLive(event);
   const showPlot = isHousingDistrict(event.map);
@@ -75,15 +73,7 @@ const EventCard = (eventCardProps: EventCardProps) => {
 
   const handleClick = () => {
     if (event.id) {
-      if (isIntegrated) {
-        navigate(ROUTES.EVENTS_DETAIL_MODAL.replace(":id", event.id), {
-          state: {
-            event
-          }
-        })
-      } else {
-        navigate(ROUTES.EVENTS_DETAIL_MODAL.replace(":id", event.id))
-      }
+      navigate(ROUTES.EVENTS_DETAIL_MODAL.replace(":id", event.id))
     } else {
       throw new Error(`Can't view an event without an ID: ${event}`);
     }
@@ -92,7 +82,7 @@ const EventCard = (eventCardProps: EventCardProps) => {
   return (
     <Flex
       direction="column"
-      justifyContent={isIntegrated ? "space-between" : "space-around"}
+      justifyContent="space-around"
       height="100%"
       p={4}
       borderRadius="lg"
@@ -217,54 +207,48 @@ const EventCard = (eventCardProps: EventCardProps) => {
         </Flex>
       </Box>
 
-      {!isIntegrated &&
-        <Flex direction="row" justifyContent="space-evenly" alignItems="center">
-          {event.host &&
-            <Stat maxWidth="fit-content">
-              <StatLabel textAlign="center">Host</StatLabel>
-              <StatNumber>
-                <AvatarGroup size="xs" justifyContent="center">
+      <Flex direction="row" justifyContent="space-evenly" alignItems="center">
+        {event.host &&
+          <Stat maxWidth="fit-content">
+            <StatLabel textAlign="center">Host</StatLabel>
+            <StatNumber>
+              <AvatarGroup size="xs" justifyContent="center">
+                <TooltipAvatar
+                  borderColor={COLORS.GREY_LIGHT}
+                  size="xs"
+                  name={event.host.displayName}
+                  src={event.host.photoUrl}
+                />
+              </AvatarGroup>
+            </StatNumber>
+            <StatHelpText textAlign="center">1 host</StatHelpText>
+          </Stat>
+        }
+
+        {event.guests &&
+          <Stat maxWidth="fit-content">
+            <StatLabel textAlign="center">Guests</StatLabel>
+            <StatNumber>
+              <AvatarGroup size="xs" justifyContent="center" max={3}>
+                {event.guests.map((guest, index) => (
                   <TooltipAvatar
                     borderColor={COLORS.GREY_LIGHT}
+                    name={guest.displayName}
+                    src={guest.photoUrl}
                     size="xs"
-                    name={event.host.displayName}
-                    src={event.host.photoUrl}
+                    key={index}
                   />
-                </AvatarGroup>
-              </StatNumber>
-              <StatHelpText textAlign="center">1 host</StatHelpText>
-            </Stat>
-          }
-
-          {event.guests &&
-            <Stat maxWidth="fit-content">
-              <StatLabel textAlign="center">Guests</StatLabel>
-              <StatNumber>
-                <AvatarGroup size="xs" justifyContent="center" max={3}>
-                  {event.guests.map((guest, index) => (
-                    <TooltipAvatar
-                      borderColor={COLORS.GREY_LIGHT}
-                      name={guest.displayName}
-                      src={guest.photoUrl}
-                      size="xs"
-                      key={index}
-                    />
-                  ))}
-                </AvatarGroup>
-              </StatNumber>
-              <StatHelpText textAlign="center">{event.guests.length} {event.guests.length > 1 || event.guests.length === 0 ? "guests" : "guest"}</StatHelpText>
-            </Stat>
-          }
-        </Flex>
-      }
+                ))}
+              </AvatarGroup>
+            </StatNumber>
+            <StatHelpText textAlign="center">{event.guests.length} {event.guests.length > 1 || event.guests.length === 0 ? "guests" : "guest"}</StatHelpText>
+          </Stat>
+        }
+      </Flex>
 
       <Flex mt={2} direction="row" justifyContent="flex-end" alignItems="flex-end">
         <Box fontWeight="semibold" fontSize="xs">
-          {
-            isIntegrated ?
-              "Integrated event"
-              :
-              `${showUpdatedTimestamp ? "Updated" : "Created"} ${updatedOrCreatedTimestamp.local().fromNow()}`}
+          {`${showUpdatedTimestamp ? "Updated" : "Created"} ${updatedOrCreatedTimestamp.local().fromNow()}`}
         </Box>
 
         {showNewBadge && (

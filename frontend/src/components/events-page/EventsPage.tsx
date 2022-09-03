@@ -26,7 +26,7 @@ import { Outlet, useMatch } from "react-router-dom";
 import { WorldServer } from "../../types/WorldServer";
 import { Event } from "../../types/Event";
 import { COLORS } from "../../styles/theme";
-import { EventType, EVENT_TYPES, EVENT_TYPES_TO_ARTICLES } from "../../types/EventType";
+import { EventType, EVENT_TYPES_TO_ARTICLES } from "../../types/EventType";
 import { EventFilters, EVENT_FIELDS, getEvents } from "../../database/events";
 import EventFilterList from "./filters/EventFilterList";
 import { TreasureMap } from "../../types/TreasureMap";
@@ -35,8 +35,6 @@ import { ROUTES } from "../../consts/routes";
 import { MdFilterList } from "@react-icons/all-files/md/MdFilterList";
 import EventTypeSelect from "./filters/EventTypeSelect";
 import ServerMenu from "./filters/ServerMenu";
-import axios from "axios";
-import { FfxivRpEvent, transformFfxivRpEvent } from "../../ffxiv-rp/ffxiv-rp";
 
 const EVENT_PAGE_LIMIT = 25;
 
@@ -73,15 +71,6 @@ const EventsPage = (eventPageProps: EventPageProps) => {
   const [selectedMaps, setSelectedMaps] = useState<string[]>([]);
   const [onlyLiveEvents, setOnlyLiveEvents] = useState<boolean>(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
-  const [ffxivRpEvents, setFfxivRpEvents] = useState<Event[]>([]);
-
-  const showFfxivRpEvents =
-    selectedEventType === null
-    && selectedGenres.length === 0
-    && adultOnly === false
-    && selectedTreasureMaps.length === 0
-    && selectedMaps.length === 0
-    && onlyLiveEvents === false;
 
   // PAGINATION STATE
   const [count, setCount] = useState<number>(0);
@@ -523,7 +512,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 overflowY="auto"
               >
                 <EventsGrid
-                  events={showFfxivRpEvents ? [...events, ...ffxivRpEvents] : events}
+                  events={events}
                   fetchMoreEvents={() => setOffset(prevOffset => prevOffset + EVENT_PAGE_LIMIT)}
                   hasMore={offset <= count}
                 />

@@ -61,7 +61,6 @@ import FrequencyField from "./fields/frequency/FrequencyField";
 import CommentSection from "./fields/CommentSection";
 import InfoText from "../../shared/InfoText";
 import { TIME_FORMAT } from "./fields/frequency/DateTimeField";
-import { INTEGRATED_EVENT_ID, isIntegratedEvent } from "../../../helpers/isIntegratedEvent";
 
 export const EARLIEST_START_TIME = moment.utc().add(15 - (moment.utc().minute() % 15), "minutes");
 export const EARLIEST_END_TIME = EARLIEST_START_TIME.clone().add(1, "hour");
@@ -143,8 +142,6 @@ const EventModal = (eventModalProps: EventModalProps) => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isViewingAsUser, setIsViewingAsUser] = useState<boolean>(eventsDetailModalNewMatch ? false : true);
-
-  const isIntegrated = event && isIntegratedEvent(event);
 
   const userIsHost = user && event ? isHost(user, event) : false;
   const userIsGuest = user && event ? isGuest(user, event) : false;
@@ -318,10 +315,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
   useEffect(() => {
     if (id) {
-      if (id === INTEGRATED_EVENT_ID) {
-        const { event: integratedEvent } = location.state as EventModalLocationState;
-        setEvent(integratedEvent);
-      } else if (id === "new") {
+      if (id === "new") {
         const locationState = location.state as EventModalLocationState;
 
         if (locationState) {
@@ -811,7 +805,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               }
 
               {/* HOST & GUESTS */}
-              {!isIntegrated && event && !isEditable &&
+              {event && !isEditable &&
                 <Flex mt={3} direction="row" justifyContent="space-evenly" alignItems="center">
                   {event.host &&
                     <Stat maxWidth="fit-content">
@@ -866,7 +860,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               }
 
               {/* COMMENTS */}
-              {!isIntegrated && event && !isEditable &&
+              {event && !isEditable &&
                 <FormControl
                   mt={{
                     base: 2,
@@ -889,7 +883,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               }
 
               {/* SHARE */}
-              {!isIntegrated && event && !isEditable &&
+              {event && !isEditable &&
                 <FormControl
                   mt={3}
                 >
@@ -938,147 +932,93 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
             <ModalFooter>
               <Flex direction="column" alignItems="flex-end" width="100%">
-                {isIntegrated ?
-                  <Flex
-                    direction="row"
-                  >
-                    <Tooltip
-                      label="This event was integrated through ffxiv-rp, check them out here."
-                      fontSize="sm"
-                    >
+                {user ?
+                  (
+                    isEditable ?
                       <Flex
                         direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        backgroundColor={COLORS.GREY_LIGHT}
-                        borderRadius="lg"
+                        justifyContent={event ? "space-between" : "flex-end"}
+                        width="100%"
                       >
-                        <Link
-                          href="https://ffxiv-rp.org"
-                          isExternal
-                          color={COLORS.GREY_NORMAL}
-                          mx={4}
-                          my={2}
-                          overflow="hidden"
-                          whiteSpace="nowrap"
-                          textOverflow="ellipsis"
-                        >
-                          <LinkIcon mr={2} />
-
-                          ffxiv-rp.org
-                        </Link>
-                      </Flex>
-                    </Tooltip>
-
-                    <Tooltip
-                      shouldWrapChildren
-                      label="This is an integrated event. If you are the event host, you can claim it as your own to customize it.
-                      Users will be able to mark themselves as guest, comment and filter on your event."
-                    >
-                      <Button
-                        ml={3}
-                        isDisabled={!user}
-                        onClick={() => navigate(ROUTES.EVENTS_DETAIL_MODAL_NEW, {
-                          state: {
-                            event
-                          }
-                        })}
-                      >
-                        {user ? "Claim" : "Sign in to claim"}
-                      </Button>
-                    </Tooltip>
-                  </Flex>
-                  :
-                  <>
-                    {user ?
-                      (
-                        isEditable ?
-                          <Flex
-                            direction="row"
-                            justifyContent={event ? "space-between" : "flex-end"}
-                            width="100%"
-                          >
-                            {event &&
-                              <Button
-                                onClick={() => handleClickDelete(event)}
-                                isLoading={isDeleting}
-                                loadingText="Deleting"
-                                colorScheme="red"
-                                width="fit-content"
-                              >
-                                Delete
-                              </Button>
-                            }
-
-                            <Box>
-                              <Button
-                                variant="ghost"
-                                onClick={closeModal}
-                                mr={3}
-                                width="fit-content"
-                              >
-                                {event ? "Cancel" : "Discard"}
-                              </Button>
-
-                              <Button
-                                onClick={handleClickCreateUpdate}
-                                isDisabled={!isFormStateValid}
-                                isLoading={isSaving}
-                                loadingText={event ? "Updating" : "Creating"}
-                                colorScheme="blackAlpha"
-                                width="fit-content"
-                              >
-                                {event ? "Update" : "Create"}
-                              </Button>
-                            </Box>
-                          </Flex>
-                          :
-                          event && !userIsHost &&
+                        {event &&
                           <Button
-                            leftIcon={userIsGuest ? <CheckIcon /> : <PlusSquareIcon />}
-                            onClick={() => handleClickAttend(user, event)}
+                            onClick={() => handleClickDelete(event)}
+                            isLoading={isDeleting}
+                            loadingText="Deleting"
+                            colorScheme="red"
+                            width="fit-content"
+                          >
+                            Delete
+                          </Button>
+                        }
+
+                        <Box>
+                          <Button
+                            variant="ghost"
+                            onClick={closeModal}
+                            mr={3}
+                            width="fit-content"
+                          >
+                            {event ? "Cancel" : "Discard"}
+                          </Button>
+
+                          <Button
+                            onClick={handleClickCreateUpdate}
+                            isDisabled={!isFormStateValid}
                             isLoading={isSaving}
-                            loadingText={userIsGuest ? "Removing" : "Attending"}
-                            colorScheme={userIsGuest ? "green" : "blackAlpha"}
+                            loadingText={event ? "Updating" : "Creating"}
+                            colorScheme="blackAlpha"
                             width="fit-content"
                           >
-                            {userIsGuest ? "Attending" : "Attend"}
+                            {event ? "Update" : "Create"}
                           </Button>
-
-                      )
-                      :
-                      <Flex direction="row" justifyContent="flex-end" width="100%">
-                        {eventsDetailModalNewMatch ?
-                          <Button
-                            leftIcon={<LockIcon />}
-                            isDisabled
-                            colorScheme="gray"
-                            width="fit-content"
-                          >
-                            Sign in to create an event
-                          </Button>
-                          :
-                          <Button
-                            leftIcon={<LockIcon />}
-                            isDisabled
-                            colorScheme="gray"
-                            width="fit-content"
-                          >
-                            Sign in to mark yourself as guest
-                          </Button>}
+                        </Box>
                       </Flex>
-                    }
+                      :
+                      event && !userIsHost &&
+                      <Button
+                        leftIcon={userIsGuest ? <CheckIcon /> : <PlusSquareIcon />}
+                        onClick={() => handleClickAttend(user, event)}
+                        isLoading={isSaving}
+                        loadingText={userIsGuest ? "Removing" : "Attending"}
+                        colorScheme={userIsGuest ? "green" : "blackAlpha"}
+                        width="fit-content"
+                      >
+                        {userIsGuest ? "Attending" : "Attend"}
+                      </Button>
 
-                    {user && isEditable && !isFormStateValid &&
-                      <Box mt={3}>
-                        <InfoText
-                          text="Please make sure all required fields are filled in. Times must be selected in 15-minute intervals. 
+                  )
+                  :
+                  <Flex direction="row" justifyContent="flex-end" width="100%">
+                    {eventsDetailModalNewMatch ?
+                      <Button
+                        leftIcon={<LockIcon />}
+                        isDisabled
+                        colorScheme="gray"
+                        width="fit-content"
+                      >
+                        Sign in to create an event
+                      </Button>
+                      :
+                      <Button
+                        leftIcon={<LockIcon />}
+                        isDisabled
+                        colorScheme="gray"
+                        width="fit-content"
+                      >
+                        Sign in to mark yourself as guest
+                      </Button>}
+                  </Flex>
+                }
+
+                {user && isEditable && !isFormStateValid &&
+                  <Box mt={3}>
+                    <InfoText
+                      text="Please make sure all required fields are filled in. Times must be selected in 15-minute intervals. 
                     For one-time events, 
                     the start date must be in the future and the event can not be longer than 1 day."
-                        />
-                      </Box>
-                    }
-                  </>
+                    />
+                  </Box>
                 }
               </Flex>
             </ModalFooter>
