@@ -90,7 +90,7 @@ const LandingPage = () => {
                 }}
                 color={COLORS.WHITE}
               >
-                Host social events, raids and more!
+                Host social events, raids and more
               </Heading>
 
               <Flex
