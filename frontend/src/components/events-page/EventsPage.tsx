@@ -118,34 +118,18 @@ const EventsPage = (eventPageProps: EventPageProps) => {
 
     const filters: EventFilters = {};
 
+    filters[EVENT_FIELDS.ADULT_ONLY] = adultOnly;
+
     if (selectedEventType) {
       filters[EVENT_FIELDS.TYPE] = selectedEventType;
+    }
 
-      switch (selectedEventType) {
-        case EVENT_TYPES.NIGHT_CLUB:
-          if (selectedGenres.length) {
-            filters[EVENT_FIELDS.GENRES] = selectedGenres;
-          }
+    if (selectedGenres.length) {
+      filters[EVENT_FIELDS.GENRES] = selectedGenres;
+    }
 
-          break;
-
-        case EVENT_TYPES.RP_VENUE:
-          if (adultOnly) {
-            filters[EVENT_FIELDS.ADULT_ONLY] = adultOnly;
-          }
-
-          break;
-
-        case EVENT_TYPES.TREASURE_MAPS:
-          if (selectedTreasureMaps.length) {
-            filters[EVENT_FIELDS.TREASURE_MAPS] = selectedTreasureMaps;
-          }
-
-          break;
-
-        default:
-          break;
-      }
+    if (selectedTreasureMaps.length) {
+      filters[EVENT_FIELDS.TREASURE_MAPS] = selectedTreasureMaps;
     }
 
     if (selectedWorldServers.length) {
@@ -186,10 +170,11 @@ const EventsPage = (eventPageProps: EventPageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     worldServers,
+    adultOnly,
     selectedEventType,
-    selectedMaps,
     selectedGenres,
     selectedTreasureMaps,
+    selectedMaps,
     offset,
     selectedSortOption.value,
     selectedSortOrder.value,

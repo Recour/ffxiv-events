@@ -3,6 +3,8 @@ import { SetStateAction } from "react";
 import { COLORS } from "../../../styles/theme";
 import { EventType, EVENT_TYPES } from "../../../types/EventType";
 import { TreasureMap } from "../../../types/TreasureMap";
+import SwitchField from "../event-modal/fields/SwitchField";
+import AllEventsFilters from "../event-types/all-events/AllEventsFilters";
 import NightClubFilters from "../event-types/night-club/NightClubFilters";
 import RPVenueFilters from "../event-types/rp-venue/RPVenueFilters";
 import TreasureMapsFilters from "../event-types/treasure-maps/TreasureMapsFilters";
@@ -59,7 +61,7 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
     setSelectedTreasureMaps,
   } = eventFilterListProps;
 
-  const EventTypeFilters = selectedEventType ? EVENT_TYPE_FILTERS_COMPONENTS[selectedEventType] : null;
+  const EventTypeFilters = selectedEventType ? EVENT_TYPE_FILTERS_COMPONENTS[selectedEventType] : AllEventsFilters;
 
   return (
     <Flex direction="column">
@@ -78,26 +80,12 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
         direction="column"
         maxWidth="100%"
       >
-        <Flex
-          direction="row"
-          alignItems="center"
-        >
-          <Text
-            color={COLORS.WHITE}
-          >
-            Live events only
-          </Text>
-
-          <Switch
-            ml={{
-              base: 2,
-              sm: 3
-            }}
-            isChecked={onlyLiveEvents}
-            onChange={(e) => setOnlyLiveEvents(e.target.checked)}
-            colorScheme="whiteAlpha"
-          />
-        </Flex>
+        <SwitchField
+          label={"Live events only"}
+          value={onlyLiveEvents}
+          setValue={(value: boolean) => setOnlyLiveEvents(value)}
+          color={COLORS.WHITE}
+        />
 
         {maps &&
           <Box
@@ -119,7 +107,7 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
           size="md"
           color={COLORS.WHITE}
         >
-          {`${selectedEventType ? selectedEventType : "Event type"} filters`}
+          Event specific filters
         </Heading>
 
         <Box
@@ -128,8 +116,26 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
             sm: 3
           }}
         >
-          {EventTypeFilters ?
-            <EventTypeFilters
+          {selectedEventType ?
+            EVENT_TYPE_FILTERS_COMPONENTS[selectedEventType] ?
+              <EventTypeFilters
+                selectedEventType={selectedEventType}
+                selectedGenres={selectedGenres}
+                adultOnly={adultOnly}
+                setAdultOnly={setAdultOnly}
+                treasureMaps={treasureMaps}
+                selectedTreasureMaps={selectedTreasureMaps}
+                setSelectedGenres={setSelectedGenres}
+                setSelectedTreasureMaps={setSelectedTreasureMaps}
+              />
+              :
+              <Text
+                color={COLORS.WHITE}
+              >
+                No {selectedEventType} specific filters
+              </Text>
+            :
+            <AllEventsFilters
               selectedEventType={selectedEventType}
               selectedGenres={selectedGenres}
               adultOnly={adultOnly}
@@ -139,12 +145,6 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
               setSelectedGenres={setSelectedGenres}
               setSelectedTreasureMaps={setSelectedTreasureMaps}
             />
-            :
-            <Text
-              color={COLORS.WHITE}
-            >
-              {selectedEventType ? `No filters for ${selectedEventType}` : "Select an event type to see event type specific filters"}
-            </Text>
           }
         </Box>
       </Flex>

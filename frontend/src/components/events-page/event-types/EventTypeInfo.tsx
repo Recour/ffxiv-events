@@ -18,11 +18,6 @@ export interface EventTypeInfoProps {
 const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
   const { isEditable, formState } = eventTypeInfoProps;
 
-  const EmptyEventTypeInfoComponent = () =>
-    <Text color="gray.400">
-      Select an event type to see event options
-    </Text>;
-
   const NoEventTypeInfoComponent = () =>
     <Text color="gray.400">
       No event options available for {formState.type}
@@ -30,13 +25,6 @@ const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
   let EventTypeInfoComponent;
 
   switch (formState.type) {
-    case "":
-      if (isEditable) {
-        EventTypeInfoComponent = EmptyEventTypeInfoComponent;
-      }
-      
-      break;
-
     case EVENT_TYPES.RAID:
       EventTypeInfoComponent = RaidInfo;
       break;

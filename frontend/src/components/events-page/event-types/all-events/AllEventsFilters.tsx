@@ -1,6 +1,7 @@
-import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { COLORS } from "../../../../styles/theme";
 import { GENRES } from "../../../../types/Genre";
+import SwitchField from "../../event-modal/fields/SwitchField";
 import { EventTypeFiltersProps } from "../../filters/EventFilterList";
 import FilterMenu from "../../filters/FilterMenu";
 
@@ -11,26 +12,12 @@ const AllEventsFilters = (allEventsFiltersProps: EventTypeFiltersProps) => {
 
   return (
     <Flex direction="column">
-      <Flex
-        direction="row"
-        alignItems="center"
-      >
-        <Text
-          color={COLORS.WHITE}
-        >
-          Adult only
-        </Text>
-
-        <Switch
-          ml={{
-            base: 2,
-            sm: 3
-          }}
-          isChecked={adultOnly}
-          onChange={(e) => setAdultOnly(e.target.checked)}
-          colorScheme="whiteAlpha"
-        />
-      </Flex>
+      <SwitchField
+        label={"Adult only"}
+        value={adultOnly}
+        setValue={(value: boolean) => setAdultOnly(value)}
+        color={COLORS.WHITE}
+      />
 
       <Box
         mt={{

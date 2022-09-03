@@ -4,14 +4,17 @@ interface SwitchFieldProps {
   label: string;
   value: boolean;
   setValue: (value: boolean) => void;
+  color?: string;
 }
 
 const SwitchField = (switchFieldProps: SwitchFieldProps) => {
-  const { label, value, setValue } = switchFieldProps;
+  const { label, value, setValue, color } = switchFieldProps;
 
   return (
     <Flex direction="row" alignItems="center">
-      <Text>
+      <Text
+        color={color}
+      >
         {label}
       </Text>
 

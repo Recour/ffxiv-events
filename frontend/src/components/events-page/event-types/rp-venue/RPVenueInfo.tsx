@@ -12,7 +12,7 @@ const RPVenueInfo = (rpVenueInfoProps: EventTypeInfoProps) => {
         <Flex
           direction="column"
         >
-          {/* 18+ ONLY */}
+          {/* ADULT ONLY */}
           <SwitchField
             label={"Adult only"}
             value={formState.adultOnly}
