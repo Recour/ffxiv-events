@@ -44,6 +44,7 @@ const createFormDataFromEvent = (event: Event | NewEvent, backgroundImageFile: F
   formData.set("recurrings", JSON.stringify(event.recurrings));
   formData.set("genres", JSON.stringify(event.genres));
   formData.set("treasureMaps", JSON.stringify(event.treasureMaps));
+  formData.set("roleSlots", JSON.stringify(event.roleSlots));
 
   if (backgroundImageFile) {
     formData.append("backgroundImageFile", backgroundImageFile);

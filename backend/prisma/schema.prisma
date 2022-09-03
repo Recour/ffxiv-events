@@ -37,6 +37,7 @@ model Event {
   website         String
   video           String
   minIlvl         Int
+  roleSlots       Json        @default("{}")
   treasureMaps    String[]
   adultOnly       Boolean
   genres          String[]

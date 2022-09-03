@@ -61,6 +61,7 @@ import FrequencyField from "./fields/frequency/FrequencyField";
 import CommentSection from "./fields/CommentSection";
 import InfoText from "../../shared/InfoText";
 import { TIME_FORMAT } from "./fields/frequency/DateTimeField";
+import { Class } from "../../../types/Class";
 
 export const EARLIEST_START_TIME = moment.utc().add(15 - (moment.utc().minute() % 15), "minutes");
 export const EARLIEST_END_TIME = EARLIEST_START_TIME.clone().add(1, "hour");
@@ -77,6 +78,40 @@ const INITIAL_FORM_STATE: NewEvent = {
   endTime: EARLIEST_END_TIME.toISOString(),
   comingSoon: false,
   recurrings: [],
+  roleSlots: [
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+    {
+      jobId: null,
+      isOpen: true
+    },
+  ],
   description: "",
   website: "",
   video: "",
@@ -121,6 +156,7 @@ interface EventModalProps {
   worldServers: WorldServer[];
   maps: string[];
   treasureMaps: TreasureMap[];
+  classes: Class[];
   user: User | null;
   refetchEventsTrigger: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -132,7 +168,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
   const { id } = useParams();
   const eventsDetailModalNewMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL_NEW);
 
-  const { worldServers, maps, treasureMaps, user, refetchEventsTrigger } = eventModalProps;
+  const { worldServers, maps, treasureMaps, classes, user, refetchEventsTrigger } = eventModalProps;
 
   const [event, setEvent] = useState<Event | null>(null);
   const [formState, setFormState] = useState<NewEvent>(INITIAL_FORM_STATE);
@@ -206,6 +242,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
         // RAID
         minIlvl: formState.minIlvl,
+        roleSlots: formState.roleSlots,
 
         // TREASURE MAPS
         treasureMaps: formState.treasureMaps,
@@ -364,6 +401,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
         // RAID
         minIlvl: event.minIlvl,
+        roleSlots: event.roleSlots,
 
         // NIGHT CLUB
         ward: event.ward,
@@ -666,6 +704,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 formState={formState}
                 setFormState={setFormState}
                 treasureMaps={treasureMaps}
+                classes={classes}
               />
 
               {/* WEBSITE */}

@@ -21,6 +21,7 @@ import CommunityPage from "./components/community-page/CommunityPage";
 import EventsCalendar from "./components/events-page/events-calendar/EventsCalendar";
 import "focus-visible/dist/focus-visible";
 import { useMeasure } from "react-use";
+import { Class } from "./types/Class";
 
 const XIVAPI = require("@xivapi/js");
 
@@ -39,6 +40,7 @@ const App = () => {
   const [worldServers, setWorldServers] = useState<WorldServer[]>([]);
   const [maps, setMaps] = useState<string[]>([]);
   const [treasureMaps, setTreasureMaps] = useState<TreasureMap[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
   const [refetchEvents, refetchEventsTrigger] = useState<boolean>(false);
 
   const [measureRef, measure] = useMeasure();
@@ -155,6 +157,21 @@ const App = () => {
     setLoadingQueue((loadingQueue) => loadingQueue - 1);
   }, [setLoadingQueue]);
 
+  // CLASSES
+  useEffect(() => {
+    (async () => {
+      setLoadingQueue((loadingQueue) => loadingQueue + 1);
+
+      const result = await axios.get("https://xivapi.com/classjob", {
+        withCredentials: false
+      });
+
+      setClasses(result.data.Results);
+
+      setLoadingQueue((loadingQueue) => loadingQueue - 1);
+    })();
+  }, []);
+
   return (
     <Sentry.ErrorBoundary showDialog={true}>
       {/* Set overflow hidden because scale() resizes the image */}
@@ -248,6 +265,7 @@ const App = () => {
                       worldServers={worldServers}
                       maps={maps}
                       treasureMaps={treasureMaps}
+                      classes={classes}
                       user={user}
                       refetchEventsTrigger={refetchEventsTrigger}
                     />

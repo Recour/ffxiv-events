@@ -1,10 +1,11 @@
-import { Flex, Tag } from "@chakra-ui/react";
+import { Box, Flex, Icon, IconButton, Image, Tag, Tooltip } from "@chakra-ui/react";
 import { EventTypeInfoProps } from "../EventTypeInfo";
 import NumberField from "../../event-modal/fields/NumberField";
 import RoleField from "../../event-modal/fields/RoleField";
+import { MdPerson } from "@react-icons/all-files/md/MdPerson";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState, setFormState } = staticInfoProps;
+  const { isEditable, classes, formState, setFormState } = staticInfoProps;
 
   return (
     <>
@@ -24,12 +25,62 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
             isEditable={true}
           />
 
-          <RoleField />
+          <Box
+            mt={3}
+          >
+            <RoleField
+              classes={classes}
+              roleSlots={formState.roleSlots}
+              setRoleSlots={(newRoleSlots) => setFormState(formState => ({
+                ...formState,
+                roleSlots: newRoleSlots
+              }))}
+            />
+          </Box>
         </Flex>
         :
-        <Tag colorScheme="red" fontSize="sm">
-          iLvl {formState.minIlvl}
-        </Tag>
+        <Flex direction="column">
+          <Tag
+            width="fit-content"
+            colorScheme="red"
+            fontSize="sm"
+          >
+            iLvl {formState.minIlvl}
+          </Tag>
+
+          <Flex
+            mt={3}
+            direction="row"
+          >
+            {formState.roleSlots.map((roleSlot, index) => {
+              const job = classes.find(job => job.ID === roleSlot.jobId);
+
+              return (
+                <Tooltip
+                  label="Coming soon"
+                  shouldWrapChildren
+                >
+                  <IconButton
+                    isDisabled
+                    ml={index === 0 ? 0 : 1}
+                    aria-label="Role slot"
+                    variant="outline"
+                    colorScheme={roleSlot.isOpen ? "blackAlpha" : "red"}
+                    size="sm"
+                    icon={job ?
+                      <Image
+                        boxSize={6}
+                        src={`https://xivapi.com/${job.Icon}`}
+                      />
+                      :
+                      <Icon as={MdPerson} />
+                    }
+                  />
+                </Tooltip>
+              );
+            })}
+          </Flex>
+        </Flex>
       }
     </>
   )

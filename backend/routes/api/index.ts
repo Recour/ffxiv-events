@@ -48,6 +48,7 @@ router.post('/events', upload, async (req: any, res, next) => {
     event.ward = parseInt(event.ward);
     event.plot = parseInt(event.plot);
     event.minIlvl = parseInt(event.minIlvl);
+    event.roleSlots = JSON.parse(event.roleSlots);
     event.adultOnly = JSON.parse(event.adultOnly);
     event.genres = JSON.parse(event.genres);
     event.treasureMaps = JSON.parse(event.treasureMaps);

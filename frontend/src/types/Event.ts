@@ -1,6 +1,7 @@
 import { Comment } from "./Comment";
 import { EventType } from "./EventType";
 import { Recurring } from "./Recurring";
+import { RoleSlot } from "./RoleSlot";
 import { TreasureMap } from "./TreasureMap";
 import { User } from "./User";
 
@@ -21,6 +22,7 @@ export interface NewEvent {
 
   // RAID
   minIlvl: number;
+  roleSlots: RoleSlot[];
 
   // FC EVENT
 
@@ -80,6 +82,7 @@ export const DUMMY_EVENT: Event = {
   backgroundImage: "",
   comments: [],
   minIlvl: 0,
+  roleSlots: [],
   treasureMaps: [],
   adultOnly: false,
   genres: []

@@ -1,12 +1,9 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Button, Flex, IconButton, Image, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tooltip } from "@chakra-ui/react";
-import axios from "axios";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Box, Button, Flex, Heading, Icon, IconButton, Image, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tooltip } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-
-interface Class {
-  Name: string;
-  Icon: string;
-};
+import { Class } from "../../../../types/Class";
+import { RoleSlot } from "../../../../types/RoleSlot";
+import { MdPerson } from "@react-icons/all-files/md/MdPerson";
 
 interface PartyType {
   name: string;
@@ -24,40 +21,45 @@ const PARTY_TYPES: { [key: string]: PartyType } = {
   }
 };
 
-const RoleField = () => {
+interface RoleFieldProps {
+  classes: Class[];
+  roleSlots: RoleSlot[];
+  setRoleSlots: (roleSlots: RoleSlot[]) => void;
+};
 
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [selectedPartyType, setSelectedPartyType] = useState<PartyType>(PARTY_TYPES.FULL);
-  const [selectedClasses, setSelectedClasses] = useState<(Class | null)[]>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
+const RoleField = (roleFieldProps: RoleFieldProps) => {
+  const { classes, roleSlots, setRoleSlots } = roleFieldProps;
 
-  useEffect(() => {
-    (async () => {
-      const result = await axios.get("https://xivapi.com/classjob", {
-        withCredentials: false
-      });
+  const [selectedPartyType, setSelectedPartyType] = useState<PartyType>(() => {
+    const initialPartyTypeKey = Object.keys(PARTY_TYPES).find(partyTypeKey => PARTY_TYPES[partyTypeKey].numberOfPlayers === roleSlots.length);
 
-      setClasses(result.data.Results);
-    })();
-  }, []);
+    if (initialPartyTypeKey) {
+      return PARTY_TYPES[initialPartyTypeKey];
+    } else {
+      return PARTY_TYPES.FULL;
+    }
+  });
 
   useEffect(() => {
-    const newSelectedClasses = [];
+    const newSelectedRoleSlots = [];
 
     for (let i = 0; i < selectedPartyType.numberOfPlayers; i++) {
-      newSelectedClasses.push(selectedClasses[i]);
+      if (roleSlots[i]) {
+        newSelectedRoleSlots.push(roleSlots[i]);
+      } else {
+        newSelectedRoleSlots.push({
+          jobId: null,
+          isOpen: true
+        });
+      }
     }
 
-    setSelectedClasses(newSelectedClasses);
-  }, [selectedPartyType, selectedClasses])
+    setRoleSlots(newSelectedRoleSlots);
+  },
+    // Disable selectedRoleSlots missing from dependency array warning because we one want updates on the selected party type.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedPartyType]
+  )
 
   return (
     <Flex
@@ -66,34 +68,44 @@ const RoleField = () => {
       borderWidth={1}
       p={3}
     >
-      <Menu>
-        <MenuButton
-          as={Button}
-          rightIcon={<ChevronDownIcon />}
-          size="sm"
-          width="fit-content"
-          variant="outline"
-        >
-          {selectedPartyType.name}
-        </MenuButton>
+      <Heading
+        size="xs"
+      >
+        Roles
+      </Heading>
 
-        <MenuList>
-          <MenuOptionGroup
-            value={selectedPartyType.name}
-            type="radio"
+      <Box
+        mt={3}
+      >
+        <Menu>
+          <MenuButton
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+            size="sm"
+            width="fit-content"
+            variant="outline"
           >
-            {Object.values(PARTY_TYPES).map((partyType, index) =>
-              <MenuItemOption
-                value={partyType.name}
-                onClick={() => setSelectedPartyType(partyType)}
-                key={index}
-              >
-                {partyType.name}
-              </MenuItemOption>
-            )}
-          </MenuOptionGroup>
-        </MenuList>
-      </Menu>
+            {selectedPartyType.name}
+          </MenuButton>
+
+          <MenuList>
+            <MenuOptionGroup
+              value={selectedPartyType.name}
+              type="radio"
+            >
+              {Object.values(PARTY_TYPES).map((partyType, index) =>
+                <MenuItemOption
+                  value={partyType.name}
+                  onClick={() => setSelectedPartyType(partyType)}
+                  key={index}
+                >
+                  {partyType.name}
+                </MenuItemOption>
+              )}
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
+      </Box>
 
       <Flex
         mt={{
@@ -102,48 +114,105 @@ const RoleField = () => {
         }}
         direction="row"
       >
-        {selectedClasses.map((job, selectedJobIndex) => <>
-          <Menu
-          >
-            <MenuButton
-              as={IconButton}
-              icon={job ? <Image boxSize={6} src={`https://xivapi.com/${job.Icon}`} /> : <AddIcon />}
-              ml={selectedJobIndex === 0 ? 0 : 1}
-              variant="outline"
-              size="sm"
-              colorScheme="blackAlpha"
-            />
+        {roleSlots.map((roleSlot, roleSlotIndex) => {
+          const job = roleSlot.jobId && classes.find(job => job.ID === roleSlot.jobId);
 
-            <MenuList maxWidth={50}>
-              {classes.map((job, index) =>
-                <Tooltip
-                  label={job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}
-                  key={index}
+          return (
+            <Menu
+              closeOnSelect={false}
+              key={roleSlotIndex}
+            >
+              <MenuButton
+                as={IconButton}
+                icon={job ?
+                  <Image
+                    boxSize={6}
+                    src={`https://xivapi.com/${job.Icon}`}
+                  />
+                  :
+                  <Icon as={MdPerson} />
+                }
+                ml={roleSlotIndex === 0 ? 0 : 1}
+                variant="outline"
+                size="sm"
+                colorScheme={roleSlot.isOpen ? "blackAlpha" : "red"}
+              />
+
+              <MenuList maxWidth={50}>
+                <MenuOptionGroup
+                  value={JSON.stringify(roleSlot.isOpen)}
+                  onChange={(value) => {
+                    const newSelectedRoleSlots = [...roleSlots];
+
+                    const selectedRoleSlot = newSelectedRoleSlots[roleSlotIndex];
+
+                    if (selectedRoleSlot) {
+                      selectedRoleSlot.isOpen = JSON.parse(value as string);
+                    } else {
+                      newSelectedRoleSlots[roleSlotIndex] = {
+                        jobId: null,
+                        isOpen: true
+                      };
+                    }
+
+                    setRoleSlots(newSelectedRoleSlots);
+                  }}
+                  title="State"
+                  type="radio"
                 >
-                  <IconButton
-                    m={1}
-                    size="sm"
-                    colorScheme="whiteAlpha"
-                    aria-label={job.Name}
-                    onClick={() => {
-                      const newSelectedClasses = [...selectedClasses];
+                  <MenuItemOption value="true">Open</MenuItemOption>
+                  <MenuItemOption value="false">Filled</MenuItemOption>
+                </MenuOptionGroup>
 
-                      newSelectedClasses[selectedJobIndex] = job;
+                <MenuOptionGroup
+                  title="Class"
+                  mt={3}
+                >
+                  {classes.map((job, index) =>
+                    <Tooltip
+                      label={job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}
+                      key={index}
+                    >
+                      <IconButton
+                        m={1}
+                        size="sm"
+                        colorScheme={roleSlot.jobId === job.ID ? "blackAlpha" : "whiteAlpha"}
+                        variant="outline"
+                        aria-label={job.Name}
+                        onClick={() => {
+                          const newSelectedRoleSlots = [...roleSlots];
 
-                      setSelectedClasses(newSelectedClasses);
-                    }}
-                  >
-                    <Image
-                      boxSize={6}
-                      src={`https://xivapi.com/${job.Icon}`}
-                    />
-                  </IconButton>
+                          const selectedRoleSlot = newSelectedRoleSlots[roleSlotIndex];
 
-                </Tooltip>
-              )}
-            </MenuList>
-          </Menu>
-        </>)}
+                          if (selectedRoleSlot) {
+                            if (selectedRoleSlot.jobId === job.ID) {
+                              selectedRoleSlot.jobId = null;
+                            } else {
+                              selectedRoleSlot.jobId = job.ID;
+                            }
+                          } else {
+                            newSelectedRoleSlots[roleSlotIndex] = {
+                              jobId: job.ID,
+                              isOpen: true
+                            };
+                          }
+
+                          setRoleSlots(newSelectedRoleSlots);
+                        }}
+                      >
+                        <Image
+                          boxSize={6}
+                          src={`https://xivapi.com/${job.Icon}`}
+                        />
+                      </IconButton>
+
+                    </Tooltip>
+                  )}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          )
+        })}
       </Flex>
     </Flex>
   );
