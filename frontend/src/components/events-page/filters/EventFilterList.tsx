@@ -1,4 +1,4 @@
-import { Flex, Switch, Box, Text, Heading } from "@chakra-ui/react";
+import { Flex, Box, Text, Heading } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { COLORS } from "../../../styles/theme";
 import { EventType, EVENT_TYPES } from "../../../types/EventType";

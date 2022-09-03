@@ -577,7 +577,11 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     }}
                     icon={MdLocationOn}
                   >
-                    {maps
+                    {/* Sort housing districts first */}
+                    {[
+                      ...maps.filter(map => isHousingDistrict(map)),
+                      ...maps.filter(map => !isHousingDistrict(map))
+                    ]
                       .map((map, index) => (
                         <option value={map} key={index}>
                           {map}
