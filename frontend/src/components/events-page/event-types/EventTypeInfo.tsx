@@ -4,6 +4,7 @@ import { Class } from "../../../types/Class";
 import { NewEvent } from "../../../types/Event";
 import { EVENT_TYPES } from "../../../types/EventType";
 import { TreasureMap } from "../../../types/TreasureMap";
+import { User } from "../../../types/User";
 import NightClubInfo from "./night-club/NightClubInfo";
 import RPVenueInfo from "./rp-venue/RPVenueInfo";
 import StaticInfo from "./static/StaticInfo";
@@ -11,8 +12,10 @@ import TreasureMapsInfo from "./treasure-maps/TreasureMapsInfo";
 
 export interface EventTypeInfoProps {
   isEditable: boolean;
+  user: User | null;
   formState: NewEvent;
   setFormState: React.Dispatch<SetStateAction<NewEvent>>;
+  attendRoleSlot: (roleSlotId: number) => void;
   treasureMaps: TreasureMap[];
   classes: Class[];
 }

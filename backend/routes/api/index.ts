@@ -1,5 +1,5 @@
 import express from 'express';
-import { createComment, createEvent, createOrDeleteGuest, deleteComment, deleteEventBackgroundImage, destroyEvent, findAndCountEvents, findComment, findEvent, findUser, updateEvent } from '../../prisma';
+import { createComment, createEvent, createOrDeleteGuest, deleteComment, deleteEventBackgroundImage, destroyEvent, findAndCountEvents, findComment, findEvent, findUser, updateEvent, updateRoleSlot } from '../../prisma';
 import multer from "multer";
 import multerS3 from 'multer-s3'
 import { s3 } from '../../aws';
@@ -180,6 +180,35 @@ router.post('/guests', async (req, res, next) => {
   }
 });
 
+// Role Slots
+// Guests
+router.post('/roleslots', async (req, res, next) => {
+  const { eventId, roleSlotId } = req.query;
+
+  if (eventId && typeof eventId === 'string' && roleSlotId && typeof roleSlotId === 'string') {
+    if (req.isAuthenticated()) {
+      const user = req.user as any;
+
+      try {
+        const updatedEvent = await updateRoleSlot(parseInt(eventId), parseInt(roleSlotId), user);
+
+        if (updatedEvent) {
+          res.status(200).json(updatedEvent);
+        } else {
+          res.status(400).json(null);
+        }
+      } catch (error) {
+        res.send(error);
+      }
+    } else {
+      res.status(401);
+    }
+  } else {
+    throw new Error(`Unable to attend role slot without ids: ${eventId} ${roleSlotId}`);
+  }
+});
+
+
 // Comments
 router.post('/comment', async (req, res, next) => {
   const { id, comment } = req.query;
@@ -218,7 +247,7 @@ router.delete('/comment', async (req, res, next) => {
       const user = req.user as any;
       const event = await findEvent(parseInt(eventId));
       const comment = await findComment(parseInt(commentId));
-      
+
       if (event.hostId === user.id || comment.userId === user.id) {
         try {
           const updatedEvent = await deleteComment(parseInt(eventId), parseInt(commentId));

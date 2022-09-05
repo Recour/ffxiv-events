@@ -1,11 +1,12 @@
-import { Box, Flex, Icon, IconButton, Image, Tag, Tooltip } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Flex, Icon, IconButton, Image, Tag, Tooltip } from "@chakra-ui/react";
 import { EventTypeInfoProps } from "../EventTypeInfo";
 import NumberField from "../../event-modal/fields/NumberField";
 import RoleField from "../../event-modal/fields/RoleField";
 import { MdPerson } from "@react-icons/all-files/md/MdPerson";
+import { COLORS } from "../../../../styles/theme";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
-  const { isEditable, classes, formState, setFormState } = staticInfoProps;
+  const { isEditable, user, classes, formState, setFormState, attendRoleSlot } = staticInfoProps;
 
   return (
     <>
@@ -57,23 +58,56 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
 
               return (
                 <Tooltip
-                  label="Coming soon"
+                  label={!user ?
+                    "Sign in to attend role slot"
+                    :
+                    !roleSlot.isOpen ?
+                      !roleSlot.guest ?
+                        "This slot is already filled"
+                        :
+                        job ?
+                          `${roleSlot.guest.displayName} as ${job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}`
+                          :
+                          `${roleSlot.guest.displayName}`
+                      :
+                      (job ?
+                        `Attend as ${job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}`
+                        :
+                        "Attend role slot"
+                      )
+                  }
+                  key={index}
                   shouldWrapChildren
                 >
                   <IconButton
-                    isDisabled
+                    onClick={() => attendRoleSlot(index)}
+                    isDisabled={!user || (!roleSlot.isOpen && !roleSlot.guest)}
                     ml={index === 0 ? 0 : 1}
                     aria-label="Role slot"
-                    variant="outline"
-                    colorScheme={roleSlot.isOpen ? "blackAlpha" : "red"}
-                    size="sm"
-                    icon={job ?
-                      <Image
-                        boxSize={6}
-                        src={`https://xivapi.com/${job.Icon}`}
-                      />
+                    colorScheme={roleSlot.isOpen ? "blackAlpha" : roleSlot.guest ? "blackAlpha" : "red"}
+                    size="lg"
+                    icon={roleSlot.guest ?
+                      <Avatar
+                        size="sm"
+                        name={job ? `${roleSlot.guest.displayName} as ${job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}` : roleSlot.guest.displayName}
+                        src={roleSlot.guest.photoUrl}
+                      >
+                        <AvatarBadge boxSize={4} bg={COLORS.WHITE}>
+                          {job ?
+                            <Image src={job ? `https://xivapi.com/${job.Icon}` : ""} />
+                            :
+                            <Icon as={MdPerson} />
+                          }
+                        </AvatarBadge>
+                      </Avatar>
                       :
-                      <Icon as={MdPerson} />
+                      job ?
+                        <Image
+                          boxSize={6}
+                          src={`https://xivapi.com/${job.Icon}`}
+                        />
+                        :
+                        <Icon as={MdPerson} />
                     }
                   />
                 </Tooltip>

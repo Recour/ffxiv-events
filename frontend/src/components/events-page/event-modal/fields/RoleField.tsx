@@ -49,7 +49,8 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
       } else {
         newSelectedRoleSlots.push({
           jobId: null,
-          isOpen: true
+          isOpen: true,
+          guest: null
         });
       }
     }
@@ -151,7 +152,8 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
                     } else {
                       newSelectedRoleSlots[roleSlotIndex] = {
                         jobId: null,
-                        isOpen: true
+                        isOpen: true,
+                        guest: null
                       };
                     }
 
@@ -193,7 +195,8 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
                           } else {
                             newSelectedRoleSlots[roleSlotIndex] = {
                               jobId: job.ID,
-                              isOpen: true
+                              isOpen: true,
+                              guest: null
                             };
                           }
 

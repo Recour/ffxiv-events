@@ -161,3 +161,19 @@ export const toggleAttendingEvent = async (event: Event) => {
     throw new Error(`Error adding guest to event: ${event.id}`);
   }
 };
+
+export const toggleAttendingRoleSlot = async (event: Event, roleSlotId: number) => {
+  try {
+    const response = await axios.post('/api/roleslots', null, {
+      params: {
+        eventId: event.id,
+        roleSlotId
+      }
+    });
+
+    const updatedEvent: Event = response.data;
+    return updatedEvent;
+  } catch (e) {
+    throw new Error(`Error attending role slot: ${event.id} ${roleSlotId}`);
+  }
+};

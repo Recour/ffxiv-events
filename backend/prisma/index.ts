@@ -76,6 +76,7 @@ export const updateEvent = async (event: any) => {
       website: event.website,
       video: event.video,
       minIlvl: event.minIlvl,
+      roleSlots: event.roleSlots,
       treasureMaps: event.treasureMaps,
       adultOnly: event.adultOnly,
       genres: event.genres,
@@ -334,6 +335,53 @@ export const createOrDeleteGuest = async (eventId: number, user: any) => {
       },
       include: eventIncludes
     });
+  }
+};
+
+// Role Slots
+export const updateRoleSlot = async (eventId: number, roleSlotId: number, user: any) => {
+  const event = await findEvent(eventId);
+
+  const newRoleSlots = event.roleSlots;
+
+  if (newRoleSlots[roleSlotId].isOpen) {
+    newRoleSlots[roleSlotId] = {
+      ...newRoleSlots[roleSlotId],
+      isOpen: false,
+      guest: {
+        id: user.id,
+        displayName: user.displayName,
+        photoUrl: user.photoUrl
+      }
+    };
+
+    return await prisma.event.update({
+      where: {
+        id: event.id
+      },
+      data: {
+        roleSlots: newRoleSlots
+      },
+      include: eventIncludes
+    });
+  } else {
+    if (newRoleSlots[roleSlotId].guest && newRoleSlots[roleSlotId].guest.id === user.id) {
+      newRoleSlots[roleSlotId] = {
+        ...newRoleSlots[roleSlotId],
+        isOpen: true,
+        guest: null
+      };
+
+      return await prisma.event.update({
+        where: {
+          id: event.id
+        },
+        data: {
+          roleSlots: newRoleSlots
+        },
+        include: eventIncludes
+      });
+    }
   }
 };
 

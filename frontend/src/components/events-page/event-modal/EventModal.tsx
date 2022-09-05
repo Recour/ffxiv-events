@@ -40,7 +40,7 @@ import { TreasureMap } from "../../../types/TreasureMap";
 import EventTypeInfo from "../event-types/EventTypeInfo";
 import { COLORS } from "../../../styles/theme";
 import { ROUTES } from "../../../consts/routes";
-import { createEvent, deleteEvent, getEvent, toggleAttendingEvent, updateEvent } from "../../../database/events";
+import { createEvent, deleteEvent, getEvent, toggleAttendingEvent, toggleAttendingRoleSlot, updateEvent } from "../../../database/events";
 import { User } from "../../../types/User";
 import { isHost } from "../../../helpers/isHost";
 import { isHousingDistrict } from "../../../helpers/isHousingDistrict";
@@ -81,35 +81,43 @@ const INITIAL_FORM_STATE: NewEvent = {
   roleSlots: [
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
     {
       jobId: null,
-      isOpen: true
+      isOpen: true,
+      guest: null
     },
   ],
   description: "",
@@ -296,6 +304,33 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
     try {
       const updatedEvent = await toggleAttendingEvent(event);
+      setEvent(updatedEvent);
+
+      toast({
+        title: userIsGuest ? "Removed as guest." : "Added as guest!",
+        description: `You are ${userIsGuest ? "no longer attending" : "now attending"} ${event.name}.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: `Could not ${userIsGuest ? "remove" : "add"} you as guest.`,
+        description: `Something went wrong while trying to ${userIsGuest ? "remove" : "add"} you as a guest to ${event.name}.`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+
+    setIsSaving(false);
+  };
+
+  const handleClickRoleSlot = async (event: Event, roleSlotId: number) => {
+    setIsSaving(true);
+
+    try {
+      const updatedEvent = await toggleAttendingRoleSlot(event, roleSlotId);
       setEvent(updatedEvent);
 
       toast({
@@ -701,8 +736,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* EVENT TYPE SPECIFIC INFO */}
               <EventTypeInfo
                 isEditable={isEditable}
+                user={user}
                 formState={formState}
                 setFormState={setFormState}
+                attendRoleSlot={(roleSlotId) => event && handleClickRoleSlot(event, roleSlotId)}
                 treasureMaps={treasureMaps}
                 classes={classes}
               />
