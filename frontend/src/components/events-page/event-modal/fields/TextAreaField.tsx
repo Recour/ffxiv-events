@@ -1,6 +1,7 @@
 import { Box, Text, Textarea } from "@chakra-ui/react";
 import { COLORS } from "../../../../styles/theme";
 import { EventModalFieldProps } from "../../../../types/EventModalFieldProps";
+import { marked } from "marked";
 
 interface TextAreaFieldProps extends EventModalFieldProps {
   value: string;
@@ -27,9 +28,10 @@ const TextAreaField = (textAreaFieldProps: TextAreaFieldProps) => {
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Text fontSize="sm">
-          {value}
-        </Text>
+        <Text
+          dangerouslySetInnerHTML={{ __html: marked.parse(value) }}
+          fontSize="sm"
+        />
       </Box>
     );
   }
