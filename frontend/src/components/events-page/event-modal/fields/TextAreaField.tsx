@@ -19,7 +19,7 @@ const TextAreaField = (textAreaFieldProps: TextAreaFieldProps) => {
         >
           <MDEditor
             value={value}
-            onChange={(value) => value && setValue(value)}
+            onChange={(value) => value ? setValue(value) : setValue("")}
           />
         </Box>
 
