@@ -1,7 +1,6 @@
-import { Box, Text, Textarea } from "@chakra-ui/react";
-import { COLORS } from "../../../../styles/theme";
+import { Box, Flex } from "@chakra-ui/react";
 import { EventModalFieldProps } from "../../../../types/EventModalFieldProps";
-import { marked } from "marked";
+import MDEditor from '@uiw/react-md-editor';
 
 interface TextAreaFieldProps extends EventModalFieldProps {
   value: string;
@@ -13,24 +12,32 @@ const TextAreaField = (textAreaFieldProps: TextAreaFieldProps) => {
 
   if (isEditable) {
     return (
-      <Textarea
-        value={value}
-        placeholder="Enter description"
-        onChange={(e) => setValue(e.target.value)}
-        focusBorderColor={COLORS.GREY_NORMAL}
-      />
+      <Flex direction="column">
+        <Box
+          data-color-mode="light"
+          className="container"
+        >
+          <MDEditor
+            value={value}
+            onChange={(value) => value && setValue(value)}
+          />
+        </Box>
+
+
+      </Flex>
     );
   } else {
     return (
       <Box
+        data-color-mode="light"
         mt={3}
         p={3}
         borderWidth="1px"
         borderRadius="lg"
       >
-        <Text
-          dangerouslySetInnerHTML={{ __html: marked.parse(value) }}
-          fontSize="sm"
+        <MDEditor.Markdown
+          source={value}
+          style={{ whiteSpace: 'pre-wrap' }}
         />
       </Box>
     );
