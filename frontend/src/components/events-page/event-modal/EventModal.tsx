@@ -20,7 +20,7 @@ import {
   StatLabel,
   StatNumber,
   CircularProgress,
-  Tooltip,
+  Tooltip
 } from "@chakra-ui/react";
 import React, { SetStateAction, useCallback, useEffect, useState } from "react";
 import { WorldServer } from "../../../types/WorldServer";
@@ -62,6 +62,8 @@ import CommentSection from "./fields/CommentSection";
 import InfoText from "../../shared/InfoText";
 import { TIME_FORMAT } from "./fields/frequency/DateTimeField";
 import { Class } from "../../../types/Class";
+import CustomizationField from "./fields/CustomizationField";
+import { EVENT_PALETTES } from "../../../types/EventPalette";
 
 export const EARLIEST_START_TIME = moment.utc().add(15 - (moment.utc().minute() % 15), "minutes");
 export const EARLIEST_END_TIME = EARLIEST_START_TIME.clone().add(1, "hour");
@@ -112,6 +114,7 @@ const INITIAL_FORM_STATE: NewEvent = {
       isOpen: true
     },
   ],
+  palette: Object.keys(EVENT_PALETTES)[0],
   description: "",
   website: "",
   video: "",
@@ -179,6 +182,8 @@ const EventModal = (eventModalProps: EventModalProps) => {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [isViewingAsUser, setIsViewingAsUser] = useState<boolean>(eventsDetailModalNewMatch ? false : true);
 
+  const eventPalette = EVENT_PALETTES[formState.palette];
+
   const userIsHost = user && event ? isHost(user, event) : false;
   const userIsGuest = user && event ? isGuest(user, event) : false;
 
@@ -236,6 +241,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
         endTime: formState.endTime,
         comingSoon: formState.comingSoon,
         recurrings: formState.recurrings,
+        palette: formState.palette,
         description: formState.description,
         website: formState.website === "https://" ? "" : formState.website,
         video: formState.video === "https://" ? "" : formState.video,
@@ -395,6 +401,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
         endTime: event.endTime,
         comingSoon: event.comingSoon,
         recurrings: event.recurrings,
+        palette: event.palette,
         description: event.description,
         website: event.website,
         video: event.video,
@@ -428,7 +435,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
     >
       <ModalOverlay />
 
-      <ModalContent>
+      <ModalContent
+        bgColor={eventPalette.eventBgColor}
+      >
         {isLoadingEvent ?
           <>
             <ModalHeader />
@@ -460,6 +469,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                         name: newName
                       }))
                   }}
+                  eventPalette={eventPalette}
                 />
 
                 <Box
@@ -518,6 +528,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   {/* TYPE */}
                   <SelectField
                     isEditable={isEditable}
+                    eventPalette={eventPalette}
                     placeholder="Select event type"
                     value={formState.type}
                     setValue={(newType) => {
@@ -557,6 +568,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 >
                   <SelectField
                     isEditable={isEditable}
+                    eventPalette={eventPalette}
                     placeholder="Select server"
                     value={formState.server}
                     setValue={(newServer) => {
@@ -599,6 +611,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 >
                   <SelectField
                     isEditable={isEditable}
+                    eventPalette={eventPalette}
                     placeholder="Select map"
                     value={hasSelectedHousingDistrict ? (isEditable ? formState.map : `${formState.map} - W${formState.ward} P${formState.plot}`) : formState.map}
                     setValue={(newMap) => {
@@ -639,10 +652,12 @@ const EventModal = (eventModalProps: EventModalProps) => {
                         base: 2,
                         sm: 2
                       }}
+                      {...eventPalette.fieldStyles}
                     >
                       {/* WARD */}
                       <NumberField
                         isEditable={isEditable}
+                        eventPalette={eventPalette}
                         label="Ward"
                         value={formState.ward}
                         setValue={(newWard) =>
@@ -662,6 +677,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                       >
                         <NumberField
                           isEditable={isEditable}
+                          eventPalette={eventPalette}
                           label="Plot"
                           value={formState.plot}
                           setValue={(newPlot) =>
@@ -690,9 +706,11 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   base: 2,
                   sm: 2
                 }}
+                {...eventPalette.fieldStyles}
               >
                 <FrequencyField
                   isEditable={isEditable}
+                  eventPalette={eventPalette}
                   formState={formState}
                   setFormState={setFormState}
                 />
@@ -701,6 +719,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* EVENT TYPE SPECIFIC INFO */}
               <EventTypeInfo
                 isEditable={isEditable}
+                eventPalette={eventPalette}
                 formState={formState}
                 setFormState={setFormState}
                 treasureMaps={treasureMaps}
@@ -716,6 +735,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   }}
                 >
                   <LinkField
+                    eventPalette={eventPalette}
                     placeholder={"Enter website link (optional)"}
                     value={formState.website}
                     setValue={(value) => setFormState((formState) => ({
@@ -734,13 +754,12 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   direction="row"
                   justifyContent="space-between"
                   alignItems="center"
-                  backgroundColor={COLORS.GREY_LIGHT}
                   borderRadius="lg"
+                  {...eventPalette.fieldStyles}
                 >
                   <Link
                     href={formState.website}
                     isExternal
-                    color={COLORS.GREY_NORMAL}
                     ml={4}
                     my={2}
                     overflow="hidden"
@@ -762,6 +781,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   sm: 3
                 }}>
                   <LinkField
+                    eventPalette={eventPalette}
                     placeholder={"Enter video/livestream link (optional)"}
                     value={formState.video}
                     setValue={(value) => setFormState((formState) => ({
@@ -814,6 +834,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               >
                 <TextAreaField
                   isEditable={isEditable}
+                  eventPalette={eventPalette}
                   value={formState.description}
                   setValue={(newDescription) => {
                     if (newDescription.length < 1000) {
@@ -835,6 +856,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   }}
                 >
                   <FileUploadField
+                    eventPalette={eventPalette}
                     file={backgroundImageFile}
                     setFile={(value) => setBackgroundImageFile(value)}
                     placeholder="Upload background image (.png, .jpg, .jpeg) (max. 10 MB) (optional)"
@@ -847,7 +869,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {event && !isEditable &&
                 <Flex mt={3} direction="row" justifyContent="space-evenly" alignItems="center">
                   {event.host &&
-                    <Stat maxWidth="fit-content">
+                    <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
                       <StatLabel textAlign="center">Host</StatLabel>
                       <StatNumber>
                         <AvatarGroup
@@ -870,7 +892,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   }
 
                   {event.guests &&
-                    <Stat maxWidth="fit-content">
+                    <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
                       <StatLabel textAlign="center">Guests</StatLabel>
                       <StatNumber>
                         <AvatarGroup
@@ -909,11 +931,13 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   <FormLabel
                     fontSize="sm"
                     fontWeight="bold"
+                    color={eventPalette.fieldStyles.color}
                   >
                     Comments
                   </FormLabel>
 
                   <CommentSection
+                    eventPalette={eventPalette}
                     user={user}
                     event={event}
                     setEvent={setEvent}
@@ -929,6 +953,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   <FormLabel
                     fontSize="sm"
                     fontWeight="bold"
+                    color={eventPalette.fieldStyles.color}
                   >
                     Share event
                   </FormLabel>
@@ -937,13 +962,12 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
-                    backgroundColor={COLORS.GREY_LIGHT}
+                    {...eventPalette.fieldStyles}
                     borderRadius="lg"
                   >
                     <Link
                       href={window.location.href}
                       isExternal
-                      color={COLORS.GREY_NORMAL}
                       ml={4}
                       overflow="hidden"
                       whiteSpace="nowrap"
@@ -967,6 +991,22 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   </Flex>
                 </FormControl>
               }
+
+              <Box
+                mt={{
+                  base: 2,
+                  sm: 3
+                }}
+              >
+                <CustomizationField
+                  isEditable={isEditable}
+                  palette={formState.palette}
+                  setPalette={(newValue) => setFormState(formState => ({
+                    ...formState,
+                    palette: newValue
+                  }))}
+                />
+              </Box>
             </ModalBody>
 
             <ModalFooter>
@@ -1051,7 +1091,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 }
 
                 {user && isEditable && !isFormStateValid &&
-                  <Box mt={3}>
+                  <Box
+                    mt={3}
+                    color={eventPalette.fieldStyles.color}
+                  >
                     <InfoText
                       text="Please make sure all required fields are filled in. Times must be selected in 15-minute intervals. 
                     For one-time events, 
@@ -1064,7 +1107,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
           </>
         }
       </ModalContent>
-    </Modal >
+    </Modal>
   );
 };
 

@@ -71,6 +71,7 @@ export const updateEvent = async (event: any) => {
       plot: event.plot,
       startTime: event.startTime,
       endTime: event.endTime,
+      palette: event.palette,
       description: event.description,
       backgroundImage: event.backgroundImage,
       website: event.website,

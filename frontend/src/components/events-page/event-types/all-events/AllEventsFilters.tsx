@@ -17,6 +17,7 @@ const AllEventsFilters = (allEventsFiltersProps: EventTypeFiltersProps) => {
         value={adultOnly}
         setValue={(value: boolean) => setAdultOnly(value)}
         color={COLORS.WHITE}
+        colorScheme="blackAlpha"
       />
 
       <Box

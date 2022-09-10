@@ -5,7 +5,7 @@ import RoleField from "../../event-modal/fields/RoleField";
 import { MdPerson } from "@react-icons/all-files/md/MdPerson";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
-  const { isEditable, classes, formState, setFormState } = staticInfoProps;
+  const { isEditable, eventPalette, classes, formState, setFormState } = staticInfoProps;
 
   return (
     <>
@@ -14,6 +14,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
           direction="column"
         >
           <NumberField
+            eventPalette={eventPalette}
             label={"Min iLvl"}
             value={formState.minIlvl}
             setValue={(value) => setFormState((formState) => ({
@@ -29,6 +30,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
             mt={3}
           >
             <RoleField
+              eventPalette={eventPalette}
               classes={classes}
               roleSlots={formState.roleSlots}
               setRoleSlots={(newRoleSlots) => setFormState(formState => ({

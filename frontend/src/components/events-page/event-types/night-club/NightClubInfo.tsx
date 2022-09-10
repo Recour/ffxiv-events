@@ -14,7 +14,7 @@ import { GENRES } from "../../../../types/Genre";
 import { EventTypeInfoProps } from "../EventTypeInfo";
 
 const NightClubInfo = (nightClubInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState, setFormState } = nightClubInfoProps;
+  const { eventPalette, isEditable, formState, setFormState } = nightClubInfoProps;
 
   const genres = Object.values(GENRES);
 
@@ -29,6 +29,7 @@ const NightClubInfo = (nightClubInfoProps: EventTypeInfoProps) => {
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
                 size="sm"
+                {...eventPalette.nestedFieldStyles}
               >
                 {`Genres: ${formState.genres.length ? formState.genres.join(', ') : "None"}`}
               </MenuButton>

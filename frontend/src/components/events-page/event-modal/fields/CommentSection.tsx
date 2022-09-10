@@ -8,17 +8,19 @@ import { isHost } from "../../../../helpers/isHost";
 import { COLORS } from "../../../../styles/theme";
 import { Comment } from "../../../../types/Comment";
 import { Event } from "../../../../types/Event";
+import { EventPalette } from "../../../../types/EventPalette";
 import { User } from "../../../../types/User";
 import CommentField from "./CommentField";
 
 interface CommentSectionProps {
+  eventPalette: EventPalette;
   user: User | null;
   event: Event;
   setEvent: React.Dispatch<SetStateAction<Event | null>>;
 };
 
 const CommentSection = (commentSectionProps: CommentSectionProps) => {
-  const { user, event, setEvent } = commentSectionProps;
+  const { eventPalette, user, event, setEvent } = commentSectionProps;
   const commentsEndRef = useRef<HTMLElement>() as React.MutableRefObject<HTMLDivElement>;
 
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
@@ -51,6 +53,7 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
       p={3}
       overflow="hidden"
       maxHeight="25vh"
+      {...eventPalette.fieldStyles}
     >
       <Box
         overflowY="auto"
@@ -64,8 +67,9 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
               sm: 3
             }}
             mt={index !== 0 ? 2 : 0}
+            borderWidth={1}
             borderRadius="lg"
-            backgroundColor={COLORS.GREY_LIGHT}
+            {...eventPalette.nestedFieldStyles}
             key={index}
           >
             <Flex
@@ -93,7 +97,6 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
                   <Text
                     fontSize="sm"
                     fontWeight="bold"
-                    color={COLORS.GREY_DARK}
                     ml={2}
                   >
                     {comment.user.displayName}
@@ -121,7 +124,7 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
                         ml={1}
                         variant="ghost"
                         size="xs"
-                        colorScheme="blackAlpha"
+                        colorScheme={eventPalette.colorScheme}
                         aria-label="Delete comment"
                         onClick={() => handleClickDelete(comment.id)}
                       />
@@ -133,7 +136,6 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
               <Text
                 mt={1}
                 fontSize="sm"
-                color={COLORS.GREY_DARK}
               >
                 {comment.text}
               </Text>
@@ -148,6 +150,7 @@ const CommentSection = (commentSectionProps: CommentSectionProps) => {
         mt={event.comments.length ? 2 : 0}
       >
         <CommentField
+          eventPalette={eventPalette}
           user={user}
           eventId={event.id}
           setEvent={setEvent}

@@ -2,6 +2,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { Class } from "../../../types/Class";
 import { NewEvent } from "../../../types/Event";
+import { EventPalette } from "../../../types/EventPalette";
 import { EVENT_TYPES } from "../../../types/EventType";
 import { TreasureMap } from "../../../types/TreasureMap";
 import NightClubInfo from "./night-club/NightClubInfo";
@@ -11,6 +12,7 @@ import TreasureMapsInfo from "./treasure-maps/TreasureMapsInfo";
 
 export interface EventTypeInfoProps {
   isEditable: boolean;
+  eventPalette: EventPalette;
   formState: NewEvent;
   setFormState: React.Dispatch<SetStateAction<NewEvent>>;
   treasureMaps: TreasureMap[];
@@ -18,10 +20,10 @@ export interface EventTypeInfoProps {
 }
 
 const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState } = eventTypeInfoProps;
+  const { isEditable, eventPalette, formState } = eventTypeInfoProps;
 
   const NoEventTypeInfoComponent = () =>
-    <Text color="gray.400">
+    <Text>
       No event options available for {formState.type}
     </Text>;
   let EventTypeInfoComponent;
@@ -65,6 +67,7 @@ const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
         p={3}
         borderWidth="1px"
         borderRadius="lg"
+        {...eventPalette.fieldStyles}
       >
         <EventTypeInfoComponent {...eventTypeInfoProps} />
       </Box>

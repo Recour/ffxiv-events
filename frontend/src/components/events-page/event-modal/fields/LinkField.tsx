@@ -1,24 +1,28 @@
 import { InputGroup, InputLeftAddon, Input } from "@chakra-ui/react";
-import { COLORS } from "../../../../styles/theme";
+import { EventPalette } from "../../../../types/EventPalette";
 
 interface LinkFieldProps {
+  eventPalette: EventPalette;
   placeholder: string;
   value: string;
   setValue: (value: string) => void;
 }
 
 const LinkField = (linkFieldProps: LinkFieldProps) => {
-  const { placeholder, value, setValue } = linkFieldProps;
+  const { eventPalette, placeholder, value, setValue } = linkFieldProps;
 
   return (
-    < InputGroup>
-      <InputLeftAddon children='https://' />
+    <InputGroup>
+      <InputLeftAddon
+        children="https://"
+        {...eventPalette.addonStyles}
+      />
 
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        focusBorderColor={COLORS.GREY_NORMAL}
+        {...eventPalette.fieldStyles}
       />
     </InputGroup>
   );

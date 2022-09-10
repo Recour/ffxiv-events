@@ -3,6 +3,7 @@ import moment from "moment";
 import { SetStateAction, useEffect, useState } from "react";
 import { NewEvent } from "../../../../../types/Event";
 import { EventModalFieldProps } from "../../../../../types/EventModalFieldProps";
+import { EventPalette } from "../../../../../types/EventPalette";
 import { Recurring } from "../../../../../types/Recurring";
 import InfoText from "../../../../shared/InfoText";
 import { EARLIEST_START_TIME } from "../../EventModal";
@@ -25,12 +26,13 @@ const DAYS_OF_WEEK = [
 ]
 
 interface FrequencyFieldProps extends EventModalFieldProps {
+  eventPalette: EventPalette;
   formState: NewEvent;
   setFormState: React.Dispatch<SetStateAction<NewEvent>>;
 };
 
 const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
-  const { isEditable, formState, setFormState } = frequencyFieldProps;
+  const { isEditable, eventPalette, formState, setFormState } = frequencyFieldProps;
 
   const isRecurring = !!formState.recurrings.length;
 
@@ -77,7 +79,7 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
         RECURRING_TYPES.ONE_TIME
       )
   );
-  
+
   const [selectedStartTimes, setSelectedStartTimes] = useState<string[]>(initialSelectedStartTimes);
   const [selectedEndTimes, setSelectedEndTimes] = useState<string[]>(initialSelectedEndTimes);
 
@@ -210,7 +212,7 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
           }}
         >
           <RadioGroup
-            colorScheme="blackAlpha"
+            colorScheme={eventPalette.colorScheme}
             onChange={(value) => handleRadioChange(value)} value={selectedRecurringType}
           >
             <Stack
@@ -226,9 +228,14 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
               {Object.values(RECURRING_TYPES).map((recurringType, index) =>
                 <Radio
                   value={recurringType}
+                  borderColor={eventPalette.fieldStyles._placeholder.color}
                   key={index}
                 >
-                  {recurringType}
+                  <Text
+                    {...eventPalette.fieldStyles}
+                  >
+                    {recurringType}
+                  </Text>
                 </Radio>)}
             </Stack>
           </RadioGroup>
@@ -240,6 +247,7 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
                 sm: 3
               }}
               orientation="horizontal"
+              borderColor={eventPalette.eventBgColor}
             />
           }
         </Box>
@@ -248,6 +256,7 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
       {selectedRecurringType === RECURRING_TYPES.ONE_TIME ?
         <DateTimeField
           isEditable={isEditable}
+          eventPalette={eventPalette}
           isRecurring={isRecurring}
           minDate={EARLIEST_START_TIME.toISOString()}
           startTime={formState.startTime}
@@ -276,7 +285,7 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
                 }}
               >
                 <CheckboxGroup
-                  colorScheme="blackAlpha"
+                  colorScheme={eventPalette.colorScheme}
                   value={selectedDaysOfWeek}
                 >
                   <Stack
@@ -289,14 +298,20 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
                           // Index is zero-based
                           value={dayOfWeek}
                           onChange={(e) => handleCheckboxChange(e)}
+                          borderColor={eventPalette.fieldStyles._placeholder.color}
                         >
-                          {dayOfWeek}
+                          <Text
+                            {...eventPalette.fieldStyles}
+                          >
+                            {dayOfWeek}
+                          </Text>
                         </Checkbox>
 
                         {selectedDaysOfWeek.includes(dayOfWeek) &&
                           <Box mt={1}>
                             <DateTimeField
                               isEditable={isEditable}
+                              eventPalette={eventPalette}
                               isRecurring={isRecurring}
                               minDate={EARLIEST_START_TIME.toISOString()}
                               startTime={selectedStartTimes[selectedDaysOfWeek.indexOf(dayOfWeek)]} // Array is zero-based
@@ -411,7 +426,10 @@ const FrequencyField = (frequencyFieldProps: FrequencyFieldProps) => {
       }
 
       {selectedRecurringType !== RECURRING_TYPES.COMING_SOON &&
-        <Box mt={2}>
+        <Box
+          mt={2}
+          {...eventPalette.fieldStyles}
+        >
           <InfoText
             text="Times are displayed in your local timezone."
           />

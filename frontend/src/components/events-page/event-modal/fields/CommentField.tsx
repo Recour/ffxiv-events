@@ -5,18 +5,19 @@ import { createComment } from "../../../../database/comments";
 import { Event } from "../../../../types/Event";
 import { User } from "../../../../types/User";
 import { useDimensions } from '@chakra-ui/react'
-import { COLORS } from "../../../../styles/theme";
+import { EventPalette } from "../../../../types/EventPalette";
 
 const MAX_COMMENT_LENGTH = 280;
 
 interface CommentFieldProps {
+  eventPalette: EventPalette;
   user: User | null;
   eventId: string;
   setEvent: React.Dispatch<SetStateAction<Event | null>>;
 };
 
 const CommentField = (commentFieldProps: CommentFieldProps) => {
-  const { user, eventId, setEvent } = commentFieldProps;
+  const { eventPalette, user, eventId, setEvent } = commentFieldProps;
   const buttonRef = useRef<HTMLElement>() as React.MutableRefObject<HTMLButtonElement>;
   const buttonDimensions = useDimensions(buttonRef);
 
@@ -48,10 +49,10 @@ const CommentField = (commentFieldProps: CommentFieldProps) => {
       <Input
         pr={`${buttonDimensions?.marginBox.width}px`}
         isDisabled={!user}
-        focusBorderColor={COLORS.GREY_NORMAL}
         placeholder="Add a comment"
         value={text}
         onChange={(e) => handleChange(e.target.value)}
+        {...eventPalette.fieldStyles}
       />
 
       <InputRightElement

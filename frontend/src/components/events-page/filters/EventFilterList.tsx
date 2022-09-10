@@ -85,6 +85,7 @@ const EventFilterList = (eventFilterListProps: EventFilterListProps) => {
           value={onlyLiveEvents}
           setValue={(value: boolean) => setOnlyLiveEvents(value)}
           color={COLORS.WHITE}
+          colorScheme="blackAlpha"
         />
 
         {maps &&
