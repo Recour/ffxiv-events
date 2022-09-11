@@ -11,6 +11,7 @@ const RPVenueFilters = (rpVenueFiltersProps: EventTypeFiltersProps) => {
       value={adultOnly}
       setValue={(value: boolean) => setAdultOnly(value)}
       color={COLORS.WHITE}
+      colorScheme="whiteAlpha"
     />
   );
 }
