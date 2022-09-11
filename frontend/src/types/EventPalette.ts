@@ -9,8 +9,11 @@ interface FieldStyles {
 }
 
 export interface EventPalette {
+  name: string;
+  emoji: string;
   eventBgColor: string;
   colorScheme: string;
+  buttonColorScheme: string;
   fieldStyles: FieldStyles;
   nestedFieldStyles: FieldStyles;
   addonStyles: FieldStyles;
@@ -19,18 +22,22 @@ export interface EventPalette {
 export const EVENT_PALETTE_NAMES = {
   WHITE: "white",
   BLACK: "black",
+  YELLOW: "yellow",
   PINK: "pink"
 };
 
 export const EVENT_PALETTES: { [key: string]: EventPalette } = {
   [EVENT_PALETTE_NAMES.WHITE]:
   {
+    name: "Light",
+    emoji: "💡",
     eventBgColor: "white",
     colorScheme: "blackAlpha",
+    buttonColorScheme: "blackAlpha",
     fieldStyles: {
       color: "gray.900",
-      bgColor: "gray.50",
-      borderColor: "gray.50",
+      bgColor: "gray.100",
+      borderColor: "gray.100",
       focusBorderColor: "gray.900",
       _placeholder: {
         color: "gray.400"
@@ -38,8 +45,8 @@ export const EVENT_PALETTES: { [key: string]: EventPalette } = {
     },
     nestedFieldStyles: {
       color: "gray.900",
-      bgColor: "gray.100",
-      borderColor: "gray.50",
+      bgColor: "gray.200",
+      borderColor: "gray.100",
       focusBorderColor: "gray.900",
       _placeholder: {
         color: "gray.400"
@@ -47,8 +54,8 @@ export const EVENT_PALETTES: { [key: string]: EventPalette } = {
     },
     addonStyles: {
       color: "gray.400",
-      bgColor: "gray.100",
-      borderColor: "gray.50",
+      bgColor: "gray.200",
+      borderColor: "gray.100",
       focusBorderColor: "gray.900",
       _placeholder: {
         color: "gray.400"
@@ -56,8 +63,11 @@ export const EVENT_PALETTES: { [key: string]: EventPalette } = {
     }
   },
   [EVENT_PALETTE_NAMES.BLACK]: {
+    name: "Dark",
+    emoji: "🔦",
     eventBgColor: "gray.900",
     colorScheme: "whiteAlpha",
+    buttonColorScheme: "whiteAlpha",
     fieldStyles: {
       color: "gray.300",
       bgColor: "gray.700",
@@ -86,9 +96,46 @@ export const EVENT_PALETTES: { [key: string]: EventPalette } = {
       },
     }
   },
+  [EVENT_PALETTE_NAMES.YELLOW]: {
+    name: "Buzzy",
+    emoji: "🐝",
+    eventBgColor: "gray.900",
+    colorScheme: "yellow",
+    buttonColorScheme: "whiteAlpha",
+    fieldStyles: {
+      color: "yellow.700",
+      bgColor: "yellow.200",
+      borderColor: "yellow.200",
+      focusBorderColor: "yellow.500",
+      _placeholder: {
+        color: "yellow.500"
+      },
+    },
+    nestedFieldStyles: {
+      color: "yellow.700",
+      bgColor: "yellow.100",
+      borderColor: "yellow.200",
+      focusBorderColor: "yellow.500",
+      _placeholder: {
+        color: "yellow.500"
+      },
+    },
+    addonStyles: {
+      color: "yellow.500",
+      bgColor: "yellow.100",
+      borderColor: "yellow.200",
+      focusBorderColor: "yellow.500",
+      _placeholder: {
+        color: "yellow.500"
+      },
+    }
+  },
   [EVENT_PALETTE_NAMES.PINK]: {
+    name: "UwU",
+    emoji: "🌸",
     eventBgColor: "pink",
     colorScheme: "pink",
+    buttonColorScheme: "blackAlpha",
     fieldStyles: {
       color: "pink.500",
       bgColor: "pink.200",

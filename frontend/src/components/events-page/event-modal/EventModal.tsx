@@ -454,7 +454,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
           <>
             <ModalHeader>
               <Flex
-                direction="row"
+                direction={{
+                  base: "column",
+                  sm: "row"
+                }}
                 justifyContent="space-between"
                 alignItems="flex-start"
               >
@@ -473,10 +476,34 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 />
 
                 <Box
+                  ml={{
+                    base: 0,
+                    sm: 3
+                  }}
+                  mt={{
+                    base: 2,
+                    sm: 0
+                  }}
+                >
+                  <CustomizationField
+                    isEditable={isEditable}
+                    palette={formState.palette}
+                    setPalette={(newValue) => setFormState(formState => ({
+                      ...formState,
+                      palette: newValue
+                    }))}
+                  />
+                </Box>
+
+                <Box
                   hidden={!userIsHost && !eventsDetailModalNewMatch}
                   ml={{
-                    base: 2,
+                    base: 0,
                     sm: 3
+                  }}
+                  mt={{
+                    base: 2,
+                    sm: 0
                   }}
                 >
                   <Tooltip
@@ -491,6 +518,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     <Button
                       leftIcon={isViewingAsUser ? <EditIcon /> : <ViewIcon />}
                       onClick={() => setIsViewingAsUser(!isViewingAsUser)}
+                      colorScheme={eventPalette.buttonColorScheme}
                     >
                       {isViewingAsUser ? "Edit" : "View draft"}
                     </Button>
@@ -717,14 +745,16 @@ const EventModal = (eventModalProps: EventModalProps) => {
               </Box>
 
               {/* EVENT TYPE SPECIFIC INFO */}
-              <EventTypeInfo
-                isEditable={isEditable}
-                eventPalette={eventPalette}
-                formState={formState}
-                setFormState={setFormState}
-                treasureMaps={treasureMaps}
-                classes={classes}
-              />
+              {formState.type &&
+                <EventTypeInfo
+                  isEditable={isEditable}
+                  eventPalette={eventPalette}
+                  formState={formState}
+                  setFormState={setFormState}
+                  treasureMaps={treasureMaps}
+                  classes={classes}
+                />
+              }
 
               {/* WEBSITE */}
               {isEditable ?
@@ -991,22 +1021,6 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   </Flex>
                 </FormControl>
               }
-
-              <Box
-                mt={{
-                  base: 2,
-                  sm: 3
-                }}
-              >
-                <CustomizationField
-                  isEditable={isEditable}
-                  palette={formState.palette}
-                  setPalette={(newValue) => setFormState(formState => ({
-                    ...formState,
-                    palette: newValue
-                  }))}
-                />
-              </Box>
             </ModalBody>
 
             <ModalFooter>
@@ -1036,6 +1050,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                             variant="ghost"
                             onClick={closeModal}
                             mr={3}
+                            colorScheme={eventPalette.buttonColorScheme}
                             width="fit-content"
                           >
                             {event ? "Cancel" : "Discard"}
@@ -1046,7 +1061,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                             isDisabled={!isFormStateValid}
                             isLoading={isSaving}
                             loadingText={event ? "Updating" : "Creating"}
-                            colorScheme="blackAlpha"
+                            colorScheme={eventPalette.buttonColorScheme}
                             width="fit-content"
                           >
                             {event ? "Update" : "Create"}
@@ -1060,7 +1075,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                         onClick={() => handleClickAttend(user, event)}
                         isLoading={isSaving}
                         loadingText={userIsGuest ? "Removing" : "Attending"}
-                        colorScheme={userIsGuest ? "green" : "blackAlpha"}
+                        colorScheme={userIsGuest ? "green" : eventPalette.buttonColorScheme}
                         width="fit-content"
                       >
                         {userIsGuest ? "Attending" : "Attend"}

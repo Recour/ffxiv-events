@@ -1,5 +1,4 @@
-import { RepeatIcon } from "@chakra-ui/icons";
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { EventModalFieldProps } from "../../../../types/EventModalFieldProps";
 import { EVENT_PALETTES } from "../../../../types/EventPalette";
 
@@ -11,6 +10,8 @@ interface CustomizationFieldProps extends EventModalFieldProps {
 const CustomizationField = (customizationFieldProps: CustomizationFieldProps) => {
   const { isEditable, palette, setPalette } = customizationFieldProps;
 
+  const eventPalette = EVENT_PALETTES[palette];
+
   const nextPaletteIndex = Object.keys(EVENT_PALETTES).findIndex((eventPaletteName) => eventPaletteName === palette) + 1;
   const correctedNextPaletteIndex = nextPaletteIndex >= Object.keys(EVENT_PALETTES).length ? 0 : nextPaletteIndex;
   const nextPalette = Object.keys(EVENT_PALETTES)[correctedNextPaletteIndex];
@@ -18,19 +19,19 @@ const CustomizationField = (customizationFieldProps: CustomizationFieldProps) =>
   return (
     <>
       {isEditable &&
-        <Flex
-          direction="row"
+        <Button
+          aria-label="Night Mode"
+          colorScheme={eventPalette.colorScheme}
+          onClick={() => setPalette(nextPalette)}
         >
-          <Button
-            aria-label="Night Mode"
-            colorScheme={EVENT_PALETTES[palette].colorScheme}
-            variant="ghost"
-            leftIcon={<RepeatIcon />}
-            onClick={() => setPalette(nextPalette)}
+          {eventPalette.emoji}
+
+          <Text
+            ml={2}
           >
-            Change theme
-          </Button>
-        </Flex>
+            {eventPalette.name}
+          </Text>
+        </Button>
       }
     </>
   );

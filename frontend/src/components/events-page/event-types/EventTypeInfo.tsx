@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { Class } from "../../../types/Class";
 import { NewEvent } from "../../../types/Event";
@@ -20,12 +20,8 @@ export interface EventTypeInfoProps {
 }
 
 const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
-  const { isEditable, eventPalette, formState } = eventTypeInfoProps;
+  const { eventPalette, formState } = eventTypeInfoProps;
 
-  const NoEventTypeInfoComponent = () =>
-    <Text>
-      No event options available for {formState.type}
-    </Text>;
   let EventTypeInfoComponent;
 
   switch (formState.type) {
@@ -50,10 +46,6 @@ const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
       break;
 
     default:
-      if (isEditable) {
-        EventTypeInfoComponent = NoEventTypeInfoComponent;
-      }
-
       break;
   }
 
