@@ -1,6 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   Flex,
   Menu,

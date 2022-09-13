@@ -98,7 +98,7 @@ const EventCard = (eventCardProps: EventCardProps) => {
       onClick={handleClick}
       _hover={{
         backgroundImage: event.backgroundImage ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("${event.backgroundImage}")` : "",
-        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
         cursor: "pointer",
         boxShadow: "dark-lg"
       }}
