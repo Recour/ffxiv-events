@@ -828,31 +828,38 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 </Box>
                 :
                 formState.website &&
-                <Flex
-                  mt={{
-                    base: 2,
-                    sm: 3
-                  }}
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderRadius="lg"
-                  {...eventPalette.fieldStyles}
+                <Box
+                  mt={6}
                 >
-                  <Link
-                    href={formState.website}
-                    isExternal
-                    ml={4}
-                    my={2}
-                    overflow="hidden"
-                    whiteSpace="nowrap"
-                    textOverflow="ellipsis"
+                  <FormLabel
+                    fontSize="sm"
+                    fontWeight="bold"
+                    color={eventPalette.fieldStyles.color}
                   >
-                    <LinkIcon mr={2} />
+                    Website
+                  </FormLabel>
+                  <Flex
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    borderRadius="lg"
+                    {...eventPalette.fieldStyles}
+                  >
+                    <Link
+                      href={formState.website}
+                      isExternal
+                      ml={4}
+                      my={2}
+                      overflow="hidden"
+                      whiteSpace="nowrap"
+                      textOverflow="ellipsis"
+                    >
+                      <LinkIcon mr={2} />
 
-                    {formState.website}
-                  </Link>
-                </Flex>
+                      {formState.website}
+                    </Link>
+                  </Flex>
+                </Box>
               }
 
 
@@ -909,11 +916,16 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
               {/* DESCRIPTION */}
               <Box
-                mt={{
-                  base: 2,
-                  sm: 3
-                }}
+                mt={6}
               >
+                <FormLabel
+                  fontSize="sm"
+                  fontWeight="bold"
+                  color={eventPalette.fieldStyles.color}
+                >
+                  Description
+                </FormLabel>
+
                 <TextAreaField
                   isEditable={isEditable}
                   eventPalette={eventPalette}
@@ -949,7 +961,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
               {/* HOST & GUESTS */}
               {event && !isEditable &&
-                <Flex mt={3} direction="row" justifyContent="space-evenly" alignItems="center">
+                <Flex mt={6} direction="row" justifyContent="space-evenly" alignItems="center">
                   {event.host &&
                     <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
                       <StatLabel textAlign="center">Host</StatLabel>
@@ -1005,10 +1017,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* COMMENTS */}
               {event && !isEditable &&
                 <FormControl
-                  mt={{
-                    base: 2,
-                    sm: 3
-                  }}
+                  mt={6}
                 >
                   <FormLabel
                     fontSize="sm"
@@ -1030,7 +1039,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* SHARE */}
               {event && !isEditable &&
                 <FormControl
-                  mt={3}
+                  mt={6}
                 >
                   <FormLabel
                     fontSize="sm"
