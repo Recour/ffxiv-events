@@ -9,15 +9,16 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
+  id          Int        @id @default(autoincrement())
+  email       String     @unique
   displayName String
   photoUrl    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  events      Event[]   @relation("events")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  events      Event[]    @relation("events")
   attending   Event[]
   comments    Comment[]
+  roleSlots   RoleSlot[]
 }
 
 model Event {
@@ -38,7 +39,6 @@ model Event {
   website         String
   video           String
   minIlvl         Int
-  roleSlots       Json        @default("{}")
   treasureMaps    String[]
   adultOnly       Boolean
   genres          String[]
@@ -48,15 +48,26 @@ model Event {
   recurrings      Recurring[]
   guests          User[]
   comments        Comment[]
+  roleSlots       RoleSlot[]
 }
 
 model Recurring {
   id        Int      @id @default(autoincrement())
-  eventId   Int
   dayOfWeek Int
   startTime DateTime @db.Time()
   endTime   DateTime @db.Time()
+  eventId   Int
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model RoleSlot {
+  id      Int     @id @default(autoincrement())
+  jobId   Int
+  isOpen  Boolean
+  eventId Int
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  guestId Int
+  guest   User    @relation(fields: [guestId], references: [id], onDelete: Cascade)
 }
 
 model Comment {
