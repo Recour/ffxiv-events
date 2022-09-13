@@ -86,7 +86,8 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
                     isDisabled={!user || (!roleSlot.isOpen && !roleSlot.guest)}
                     ml={index === 0 ? 0 : 1}
                     aria-label="Role slot"
-                    colorScheme={roleSlot.isOpen ? "blackAlpha" : roleSlot.guest ? "blackAlpha" : "red"}
+                    {...eventPalette.nestedFieldStyles}
+                    bgColor={roleSlot.isOpen ? eventPalette.nestedFieldStyles.bgColor : roleSlot.guest ? eventPalette.nestedFieldStyles.bgColor : "red"}
                     size="lg"
                     icon={roleSlot.guest ?
                       <Avatar
@@ -94,7 +95,11 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
                         name={job ? `${roleSlot.guest.displayName} as ${job.Name.charAt(0).toUpperCase() + job.Name.slice(1)}` : roleSlot.guest.displayName}
                         src={roleSlot.guest.photoUrl}
                       >
-                        <AvatarBadge boxSize={4} bg={COLORS.WHITE}>
+                        <AvatarBadge
+                          boxSize={4}
+                          bg={eventPalette.fieldStyles.bgColor}
+                          borderColor={eventPalette.fieldStyles.bgColor}
+                        >
                           {job ?
                             <Image src={job ? `https://xivapi.com/${job.Icon}` : ""} />
                             :
