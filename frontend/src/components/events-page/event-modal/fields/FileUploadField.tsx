@@ -2,9 +2,10 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { InputGroup, InputLeftElement, Icon, Input, InputRightElement, IconButton } from "@chakra-ui/react";
 import { useRef } from "react";
 import { MdFileUpload } from "@react-icons/all-files/md/MdFileUpload"
-import { COLORS } from "../../../../styles/theme";
+import { EventPalette } from "../../../../types/EventPalette";
 
 interface FileUploadFieldProps {
+  eventPalette: EventPalette;
   placeholder: string;
   acceptedFileTypes: string;
   file: File | null;
@@ -12,7 +13,7 @@ interface FileUploadFieldProps {
 }
 
 const FileUploadField = (fileUploadFieldProps: FileUploadFieldProps) => {
-  const { placeholder, acceptedFileTypes, file, setFile } = fileUploadFieldProps
+  const { eventPalette, placeholder, acceptedFileTypes, file, setFile } = fileUploadFieldProps
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   return (
@@ -20,7 +21,10 @@ const FileUploadField = (fileUploadFieldProps: FileUploadFieldProps) => {
       <InputLeftElement
         pointerEvents="none"
       >
-        <Icon as={MdFileUpload} />
+        <Icon
+          as={MdFileUpload}
+          color={eventPalette.fieldStyles.color}
+        />
       </InputLeftElement>
 
       <input
@@ -35,9 +39,9 @@ const FileUploadField = (fileUploadFieldProps: FileUploadFieldProps) => {
         textOverflow="ellipsis"
         placeholder={placeholder}
         onClick={() => inputRef.current.click()}
-        focusBorderColor={COLORS.GREY_NORMAL}
         readOnly={true}
         value={(file && file.name) || ''}
+        {...eventPalette.fieldStyles}
       />
 
       <InputRightElement

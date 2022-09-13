@@ -6,7 +6,7 @@ import { MdPerson } from "@react-icons/all-files/md/MdPerson";
 import { COLORS } from "../../../../styles/theme";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
-  const { isEditable, user, classes, formState, setFormState, attendRoleSlot } = staticInfoProps;
+  const { isEditable, user, eventPalette, classes, formState, attendRoleSlot, setFormState } = staticInfoProps;
 
   return (
     <>
@@ -15,6 +15,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
           direction="column"
         >
           <NumberField
+            eventPalette={eventPalette}
             label={"Min iLvl"}
             value={formState.minIlvl}
             setValue={(value) => setFormState((formState) => ({
@@ -30,6 +31,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
             mt={3}
           >
             <RoleField
+              eventPalette={eventPalette}
               classes={classes}
               roleSlots={formState.roleSlots}
               setRoleSlots={(newRoleSlots) => setFormState(formState => ({

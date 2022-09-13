@@ -22,6 +22,7 @@ import { MdLocationOn } from "@react-icons/all-files/md/MdLocationOn";
 import { MdAccessTime } from "@react-icons/all-files/md/MdAccessTime";
 import { MdHelpOutline } from "@react-icons/all-files/md/MdHelpOutline";
 import { MdPublic } from "@react-icons/all-files/md/MdPublic";
+import { EVENT_PALETTES } from "../../types/EventPalette";
 
 interface NewBadgeConstraints {
   amount: number;
@@ -43,6 +44,8 @@ const EventCard = (eventCardProps: EventCardProps) => {
 
   const isRecurring = event.recurrings.length;
   const isComingSoon = event.comingSoon;
+
+  const eventPalette = EVENT_PALETTES[event.palette];
 
   const showLiveBadge = isLive(event);
   const showPlot = isHousingDistrict(event.map);
@@ -86,16 +89,16 @@ const EventCard = (eventCardProps: EventCardProps) => {
       height="100%"
       p={4}
       borderRadius="lg"
-      backgroundColor="rgba(255, 255, 255, 0.9)"
+      backgroundColor={eventPalette.eventBgColor}
       backgroundImage={event.backgroundImage ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("${event.backgroundImage}")` : ""}
       backgroundSize="cover"
       backgroundRepeat="no-repeat"
       backgroundPosition="center center"
-      color={event.backgroundImage ? COLORS.WHITE : ""}
+      color={event.backgroundImage ? COLORS.WHITE : eventPalette.fieldStyles.color}
       onClick={handleClick}
       _hover={{
         backgroundImage: event.backgroundImage ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("${event.backgroundImage}")` : "",
-        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
         cursor: "pointer",
         boxShadow: "dark-lg"
       }}

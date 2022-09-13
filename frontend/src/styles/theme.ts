@@ -26,10 +26,7 @@ export const theme = extendTheme({
       ".js-focus-visible :focus:not([data-focus-visible-added])": {
         "outline": "none",
         "boxShadow": "none"
-      },
-      ".chakra-select__placeholder": {
-        "color": "gray.400"
       }
-    },
+    }
   },
 });

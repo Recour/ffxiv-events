@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Class } from "../../../../types/Class";
 import { RoleSlot } from "../../../../types/RoleSlot";
 import { MdPerson } from "@react-icons/all-files/md/MdPerson";
+import { EventPalette } from "../../../../types/EventPalette";
 
 interface PartyType {
   name: string;
@@ -22,13 +23,14 @@ const PARTY_TYPES: { [key: string]: PartyType } = {
 };
 
 interface RoleFieldProps {
+  eventPalette: EventPalette;
   classes: Class[];
   roleSlots: RoleSlot[];
   setRoleSlots: (roleSlots: RoleSlot[]) => void;
 };
 
 const RoleField = (roleFieldProps: RoleFieldProps) => {
-  const { classes, roleSlots, setRoleSlots } = roleFieldProps;
+  const { eventPalette, classes, roleSlots, setRoleSlots } = roleFieldProps;
 
   const [selectedPartyType, setSelectedPartyType] = useState<PartyType>(() => {
     const initialPartyTypeKey = Object.keys(PARTY_TYPES).find(partyTypeKey => PARTY_TYPES[partyTypeKey].numberOfPlayers === roleSlots.length);
@@ -67,7 +69,9 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
       direction="column"
       flexWrap="wrap"
       borderWidth={1}
+      borderRadius="lg"
       p={3}
+      {...eventPalette.nestedFieldStyles}
     >
       <Heading
         size="xs"
@@ -85,6 +89,7 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
             size="sm"
             width="fit-content"
             variant="outline"
+            {...eventPalette.fieldStyles}
           >
             {selectedPartyType.name}
           </MenuButton>
@@ -136,7 +141,8 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
                 ml={roleSlotIndex === 0 ? 0 : 1}
                 variant="outline"
                 size="sm"
-                colorScheme={roleSlot.isOpen ? "blackAlpha" : "red"}
+                {...eventPalette.fieldStyles}
+                borderColor={roleSlot.isOpen ? eventPalette.fieldStyles.borderColor : "red"}
               />
 
               <MenuList maxWidth={50}>

@@ -1,7 +1,8 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { SetStateAction } from "react";
 import { Class } from "../../../types/Class";
 import { NewEvent } from "../../../types/Event";
+import { EventPalette } from "../../../types/EventPalette";
 import { EVENT_TYPES } from "../../../types/EventType";
 import { TreasureMap } from "../../../types/TreasureMap";
 import { User } from "../../../types/User";
@@ -13,6 +14,7 @@ import TreasureMapsInfo from "./treasure-maps/TreasureMapsInfo";
 export interface EventTypeInfoProps {
   isEditable: boolean;
   user: User | null;
+  eventPalette: EventPalette;
   formState: NewEvent;
   setFormState: React.Dispatch<SetStateAction<NewEvent>>;
   attendRoleSlot: (roleSlotId: number) => void;
@@ -21,12 +23,8 @@ export interface EventTypeInfoProps {
 }
 
 const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState } = eventTypeInfoProps;
+  const { eventPalette, formState } = eventTypeInfoProps;
 
-  const NoEventTypeInfoComponent = () =>
-    <Text color="gray.400">
-      No event options available for {formState.type}
-    </Text>;
   let EventTypeInfoComponent;
 
   switch (formState.type) {
@@ -51,10 +49,6 @@ const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
       break;
 
     default:
-      if (isEditable) {
-        EventTypeInfoComponent = NoEventTypeInfoComponent;
-      }
-
       break;
   }
 
@@ -68,6 +62,7 @@ const EventTypeInfo = (eventTypeInfoProps: EventTypeInfoProps) => {
         p={3}
         borderWidth="1px"
         borderRadius="lg"
+        {...eventPalette.fieldStyles}
       >
         <EventTypeInfoComponent {...eventTypeInfoProps} />
       </Box>

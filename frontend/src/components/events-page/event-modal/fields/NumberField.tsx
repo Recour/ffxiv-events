@@ -1,7 +1,9 @@
 import { Flex, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
 import { EventModalFieldProps } from "../../../../types/EventModalFieldProps";
+import { EventPalette } from "../../../../types/EventPalette";
 
 interface NumberFieldProps extends EventModalFieldProps {
+  eventPalette: EventPalette;
   label: string;
   value: number;
   setValue: (value: number) => void;
@@ -10,7 +12,7 @@ interface NumberFieldProps extends EventModalFieldProps {
 }
 
 const NumberField = (numberFieldProps: NumberFieldProps) => {
-  const { isEditable, label, value, setValue, min, max } = numberFieldProps;
+  const { isEditable, eventPalette, label, value, setValue, min, max } = numberFieldProps;
 
   if (isEditable) {
     return (
@@ -18,7 +20,9 @@ const NumberField = (numberFieldProps: NumberFieldProps) => {
         direction="row"
         alignItems="center"
       >
-        <Text>
+        <Text
+          {...eventPalette.fieldStyles}
+        >
           {label}:
         </Text>
 
@@ -33,6 +37,7 @@ const NumberField = (numberFieldProps: NumberFieldProps) => {
               setValue(valueAsNumber);
             }
           }}
+          {...eventPalette.fieldStyles}
         >
           <NumberInputField />
           <NumberInputStepper>

@@ -33,6 +33,7 @@ model Event {
   endTime         DateTime
   comingSoon      Boolean     @default(false)
   description     String
+  palette         String      @default("white")
   backgroundImage String?
   website         String
   video           String

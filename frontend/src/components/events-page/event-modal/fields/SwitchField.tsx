@@ -5,10 +5,11 @@ interface SwitchFieldProps {
   value: boolean;
   setValue: (value: boolean) => void;
   color?: string;
+  colorScheme?: string;
 }
 
 const SwitchField = (switchFieldProps: SwitchFieldProps) => {
-  const { label, value, setValue, color } = switchFieldProps;
+  const { label, value, setValue, color, colorScheme } = switchFieldProps;
 
   return (
     <Flex direction="row" alignItems="center">
@@ -22,7 +23,7 @@ const SwitchField = (switchFieldProps: SwitchFieldProps) => {
         ml={2}
         isChecked={value}
         onChange={() => setValue(!value)}
-        colorScheme="blackAlpha"
+        colorScheme={colorScheme}
       >
       </Switch>
     </Flex>

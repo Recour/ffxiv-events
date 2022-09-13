@@ -3,7 +3,7 @@ import { Box, Button, Flex, Menu, MenuButton, MenuItemOption, MenuList, MenuOpti
 import { EventTypeInfoProps } from "../EventTypeInfo";
 
 const TreasureMapsInfo = (treasureMapsInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState, setFormState, treasureMaps } = treasureMapsInfoProps;
+  const { eventPalette, isEditable, formState, setFormState, treasureMaps } = treasureMapsInfoProps;
 
   return (
     <Box>
@@ -13,6 +13,7 @@ const TreasureMapsInfo = (treasureMapsInfoProps: EventTypeInfoProps) => {
             as={Button}
             rightIcon={<ChevronDownIcon />}
             size="sm"
+            {...eventPalette.nestedFieldStyles}
           >
             {`Treasure maps: ${formState.treasureMaps.length ? formState.treasureMaps.join(', ') : "None"}`}
           </MenuButton>

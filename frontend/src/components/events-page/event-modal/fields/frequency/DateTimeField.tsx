@@ -1,14 +1,15 @@
-import { Box, Flex, Icon, Input, Text } from "@chakra-ui/react";
+import { Flex, Icon, Input, Text } from "@chakra-ui/react";
 import moment from "moment";
 import { MdAccessTime } from "@react-icons/all-files/md/MdAccessTime";
 import { EventModalFieldProps } from "../../../../../types/EventModalFieldProps";
-import { COLORS } from "../../../../../styles/theme";
+import { EventPalette } from "../../../../../types/EventPalette";
 
 export const TIME_FORMAT = "HH:mm";
 export const DATE_FORMAT = "ddd DD MMM HH:mm";
 export const EDITABLE_FORMAT = "YYYY-MM-DDTHH:mm";
 
 interface DateTimeFieldProps extends EventModalFieldProps {
+  eventPalette: EventPalette;
   isRecurring: boolean;
   minDate: string;
   startTime: string;
@@ -18,7 +19,7 @@ interface DateTimeFieldProps extends EventModalFieldProps {
 }
 
 const DateTimeField = (dateTimeFieldProps: DateTimeFieldProps) => {
-  const { isEditable, isRecurring, startTime, endTime, minDate, setStartTime, setEndTime } = dateTimeFieldProps;
+  const { isEditable, eventPalette, isRecurring, startTime, endTime, minDate, setStartTime, setEndTime } = dateTimeFieldProps;
 
   const inputType = isRecurring ? "time" : "datetime-local";
   const format = isRecurring ? TIME_FORMAT : DATE_FORMAT;
@@ -41,12 +42,15 @@ const DateTimeField = (dateTimeFieldProps: DateTimeFieldProps) => {
             moment.utc(new Date(e.target.value)).toISOString()
           )}
           width="fit-content"
-          focusBorderColor={COLORS.GREY_NORMAL}
+          {...eventPalette.nestedFieldStyles}
         />
 
-        <Box m={3}>
+        <Text
+          m={3}
+          {...eventPalette.fieldStyles}
+        >
           -
-        </Box>
+        </Text>
 
         <Input
           placeholder="Select end time"
@@ -60,7 +64,7 @@ const DateTimeField = (dateTimeFieldProps: DateTimeFieldProps) => {
             moment.utc(new Date(e.target.value)).toISOString()
           )}
           width="fit-content"
-          focusBorderColor={COLORS.GREY_NORMAL}
+          {...eventPalette.nestedFieldStyles}
         />
       </Flex>
     );

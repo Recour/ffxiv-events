@@ -3,7 +3,7 @@ import { EventTypeInfoProps } from "../EventTypeInfo";
 import SwitchField from "../../event-modal/fields/SwitchField";
 
 const RPVenueInfo = (rpVenueInfoProps: EventTypeInfoProps) => {
-  const { isEditable, formState, setFormState } = rpVenueInfoProps;
+  const { isEditable, eventPalette, formState, setFormState } = rpVenueInfoProps;
 
   return (
     <>
@@ -20,6 +20,7 @@ const RPVenueInfo = (rpVenueInfoProps: EventTypeInfoProps) => {
               ...formState,
               adultOnly: value
             }))}
+            colorScheme={eventPalette.colorScheme}
           />
         </Flex>
         :

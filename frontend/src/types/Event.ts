@@ -16,6 +16,7 @@ export interface NewEvent {
   endTime: string;
   comingSoon: boolean;
   recurrings: Recurring[];
+  palette: string;
   description: string;
   website: string;
   video: string;
@@ -76,6 +77,7 @@ export const DUMMY_EVENT: Event = {
   type: "",
   endTime: "",
   comingSoon: false,
+  palette: "",
   description: "",
   website: "",
   video: "",
