@@ -882,7 +882,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 :
                 formState.video &&
                 <Box
-                  mb={6} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
+                  mb={9} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
                   width="100%"
                   paddingTop="56.25%"
                   position="relative"
