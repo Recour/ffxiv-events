@@ -341,49 +341,47 @@ export const createOrDeleteGuest = async (eventId: number, user: any) => {
 
 // Role Slots
 export const updateRoleSlot = async (eventId: number, roleSlotId: number, user: any) => {
-  const event = await findEvent(eventId);
+  // const event = await findEvent(eventId);
 
-  const newRoleSlots = event.roleSlots;
+  // const newRoleSlots = event.roleSlots;
 
-  if (newRoleSlots[roleSlotId].isOpen) {
-    newRoleSlots[roleSlotId] = {
-      ...newRoleSlots[roleSlotId],
-      isOpen: false,
-      guest: {
-        id: user.id,
-        displayName: user.displayName,
-        photoUrl: user.photoUrl
-      }
-    };
+  // if (newRoleSlots[roleSlotId].isOpen) {
+  //   newRoleSlots[roleSlotId] = {
+  //     ...newRoleSlots[roleSlotId],
+  //     isOpen: false,
+  //     guest: {
+  //       connect
+  //     }
+  //   };
 
-    return await prisma.event.update({
-      where: {
-        id: event.id
-      },
-      data: {
-        roleSlots: newRoleSlots
-      },
-      include: eventIncludes
-    });
-  } else {
-    if (newRoleSlots[roleSlotId].guest && newRoleSlots[roleSlotId].guest.id === user.id) {
-      newRoleSlots[roleSlotId] = {
-        ...newRoleSlots[roleSlotId],
-        isOpen: true,
-        guest: null
-      };
+  //   return await prisma.event.update({
+  //     where: {
+  //       id: event.id
+  //     },
+  //     data: {
+  //       roleSlots: newRoleSlots
+  //     },
+  //     include: eventIncludes
+  //   });
+  // } else {
+  //   if (newRoleSlots[roleSlotId].guest && newRoleSlots[roleSlotId].guest.id === user.id) {
+  //     newRoleSlots[roleSlotId] = {
+  //       ...newRoleSlots[roleSlotId],
+  //       isOpen: true,
+  //       guest: null
+  //     };
 
-      return await prisma.event.update({
-        where: {
-          id: event.id
-        },
-        data: {
-          roleSlots: newRoleSlots
-        },
-        include: eventIncludes
-      });
-    }
-  }
+  //     return await prisma.event.update({
+  //       where: {
+  //         id: event.id
+  //       },
+  //       data: {
+  //         roleSlots: newRoleSlots
+  //       },
+  //       include: eventIncludes
+  //     });
+  //   }
+  // }
 };
 
 // Comments
