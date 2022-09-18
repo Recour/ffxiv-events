@@ -3,9 +3,20 @@ import { EventTypeInfoProps } from "../EventTypeInfo";
 import NumberField from "../../event-modal/fields/NumberField";
 import RoleField from "../../event-modal/fields/RoleField";
 import { MdPerson } from "@react-icons/all-files/md/MdPerson";
+import { useState } from "react";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
   const { isEditable, user, eventPalette, classes, formState, attendRoleSlot, setFormState } = staticInfoProps;
+
+  const [isUpdating, setIsUpdating] = useState<number | null>(null);
+
+  const handleClickRoleSlot = async (index: number) => {
+    setIsUpdating(index);
+
+    await attendRoleSlot(index);
+
+    setIsUpdating(null);
+  };
 
   return (
     <>
@@ -81,8 +92,9 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
                   shouldWrapChildren
                 >
                   <IconButton
-                    onClick={() => attendRoleSlot(index)}
+                    onClick={() => handleClickRoleSlot(index)}
                     isDisabled={!user || (!roleSlot.isOpen && !roleSlot.guest)}
+                    isLoading={isUpdating === index}
                     ml={index === 0 ? 0 : 1}
                     aria-label="Role slot"
                     {...eventPalette.nestedFieldStyles}

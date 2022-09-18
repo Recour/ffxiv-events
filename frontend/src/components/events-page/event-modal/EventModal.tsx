@@ -385,8 +385,6 @@ const EventModal = (eventModalProps: EventModalProps) => {
   };
 
   const handleClickRoleSlot = async (event: Event, roleSlotId: number) => {
-    setIsSaving(true);
-
     try {
       const updatedEvent = await toggleAttendingRoleSlot(event, roleSlotId);
       setEvent(updatedEvent);
@@ -407,8 +405,6 @@ const EventModal = (eventModalProps: EventModalProps) => {
         isClosable: true,
       });
     }
-
-    setIsSaving(false);
   };
 
   const removeEvent = async (event: Event) => {
