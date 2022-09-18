@@ -3,7 +3,6 @@ import { EventTypeInfoProps } from "../EventTypeInfo";
 import NumberField from "../../event-modal/fields/NumberField";
 import RoleField from "../../event-modal/fields/RoleField";
 import { MdPerson } from "@react-icons/all-files/md/MdPerson";
-import { COLORS } from "../../../../styles/theme";
 
 const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
   const { isEditable, user, eventPalette, classes, formState, attendRoleSlot, setFormState } = staticInfoProps;
