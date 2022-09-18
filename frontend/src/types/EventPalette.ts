@@ -1,4 +1,4 @@
-interface FieldStyles {
+export interface FieldStyles {
   color: string;
   bgColor: string;
   borderColor: string;

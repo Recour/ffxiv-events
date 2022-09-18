@@ -15,7 +15,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
           direction="column"
         >
           <NumberField
-            eventPalette={eventPalette}
+            fieldStyles={eventPalette.nestedFieldStyles}
             label={"Min iLvl"}
             value={formState.minIlvl}
             setValue={(value) => setFormState((formState) => ({

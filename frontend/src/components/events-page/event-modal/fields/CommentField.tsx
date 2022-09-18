@@ -52,7 +52,7 @@ const CommentField = (commentFieldProps: CommentFieldProps) => {
         placeholder="Add a comment"
         value={text}
         onChange={(e) => handleChange(e.target.value)}
-        {...eventPalette.fieldStyles}
+        {...eventPalette.nestedFieldStyles}
       />
 
       <InputRightElement

@@ -159,6 +159,11 @@ const COPY_BUTTON_STATES: { [key: string]: CopyButtonState } = {
   }
 };
 
+interface FormStateValidation {
+  text: string;
+  condition: boolean;
+}
+
 interface EventModalLocationState {
   event: Event;
 }
@@ -199,35 +204,82 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
   const hasSelectedHousingDistrict = isHousingDistrict(formState.map);
 
-  const formStateValidations: boolean[] = [
-    !!user,
-    !!formState.name,
-    !!formState.server,
-    !!formState.map,
-    !!formState.startTime,
-    !!formState.endTime,
-    !!formState.description
+  const formStateValidations: FormStateValidation[] = [
+    {
+      text: "You must be signed in.",
+      condition: !!user
+    },
+    {
+      text: "Name cannot be empty.",
+      condition: !!formState.name
+    },
+    {
+      text: "Event type cannot be empty.",
+      condition: !!formState.type
+    },
+    {
+      text: "Server cannot be empty.",
+      condition: !!formState.server
+    },
+    {
+      text: "Map cannot be empty.",
+      condition: !!formState.map
+    },
+    {
+      text: "Start time cannot be empty.",
+      condition: !!formState.startTime
+    },
+    {
+      text: "End time cannot be empty.",
+      condition: !!formState.endTime
+    },
+    {
+      text: "Description cannot be empty.",
+      condition: !!formState.description
+    }
   ];
 
   if (!formState.comingSoon) {
     // Times must be selected in 15-minute intervals
-    formStateValidations.push(moment.utc(formState.startTime).minutes() % 15 === 0);
-    formStateValidations.push(moment.utc(formState.endTime).minutes() % 15 === 0);
+    const fifteenMinuteIntervalText = "Times must start at 0, 15, 30 or 45 minutes."
+    formStateValidations.push({
+      text: fifteenMinuteIntervalText,
+      condition: moment.utc(formState.startTime).minutes() % 15 === 0
+    });
+    formStateValidations.push({
+      text: fifteenMinuteIntervalText,
+      condition: moment.utc(formState.endTime).minutes() % 15 === 0
+    });
 
     formState.recurrings.forEach(recurring => {
-      formStateValidations.push(moment.utc(recurring.startTime, TIME_FORMAT).minutes() % 15 === 0);
-      formStateValidations.push(moment.utc(recurring.endTime, TIME_FORMAT).minutes() % 15 === 0);
+      formStateValidations.push({
+        text: fifteenMinuteIntervalText,
+        condition: moment.utc(recurring.startTime, TIME_FORMAT).minutes() % 15 === 0
+      });
+      formStateValidations.push({
+        text: fifteenMinuteIntervalText,
+        condition: moment.utc(recurring.endTime, TIME_FORMAT).minutes() % 15 === 0
+      });
     });
 
     if (!formState.recurrings.length) {
       // Additional time checks for one-time events
-      formStateValidations.push(moment.utc(formState.startTime).isAfter(moment.utc()));
-      formStateValidations.push(moment.utc(formState.startTime).isBefore(moment.utc(formState.endTime)));
-      formStateValidations.push(moment.utc(formState.endTime).clone().subtract(1, "day").isBefore(moment.utc(formState.startTime)));
+      formStateValidations.push({
+        text: "Start time cannot be in the past.",
+        condition: moment.utc(formState.startTime).isAfter(moment.utc())
+      });
+      formStateValidations.push({
+        text: "End time cannot be before start time.",
+        condition: moment.utc(formState.startTime).isBefore(moment.utc(formState.endTime))
+      });
+      formStateValidations.push({
+        text: "End time cannot be more than 24 hours after start time.",
+        condition: moment.utc(formState.endTime).clone().subtract(1, "day").isBefore(moment.utc(formState.startTime))
+      });
     }
   }
 
-  const isFormStateValid = formStateValidations.every(formStateValidation => formStateValidation === true);
+  const isFormStateValid = formStateValidations.every(formStateValidation => formStateValidation.condition === true);
 
   const closeModal = useCallback(() => {
     navigate(ROUTES.EVENTS_PAGE);
@@ -720,7 +772,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                       {/* WARD */}
                       <NumberField
                         isEditable={isEditable}
-                        eventPalette={eventPalette}
+                        fieldStyles={eventPalette.nestedFieldStyles}
                         label="Ward"
                         value={formState.ward}
                         setValue={(newWard) =>
@@ -740,7 +792,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                       >
                         <NumberField
                           isEditable={isEditable}
-                          eventPalette={eventPalette}
+                          fieldStyles={eventPalette.nestedFieldStyles}
                           label="Plot"
                           value={formState.plot}
                           setValue={(newPlot) =>
@@ -813,31 +865,38 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 </Box>
                 :
                 formState.website &&
-                <Flex
-                  mt={{
-                    base: 2,
-                    sm: 3
-                  }}
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderRadius="lg"
-                  {...eventPalette.fieldStyles}
+                <Box
+                  mt={6}
                 >
-                  <Link
-                    href={formState.website}
-                    isExternal
-                    ml={4}
-                    my={2}
-                    overflow="hidden"
-                    whiteSpace="nowrap"
-                    textOverflow="ellipsis"
+                  <FormLabel
+                    fontSize="sm"
+                    fontWeight="bold"
+                    color={eventPalette.fieldStyles.color}
                   >
-                    <LinkIcon mr={2} />
+                    Website
+                  </FormLabel>
+                  <Flex
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    borderRadius="lg"
+                    {...eventPalette.fieldStyles}
+                  >
+                    <Link
+                      href={formState.website}
+                      isExternal
+                      ml={4}
+                      my={2}
+                      overflow="hidden"
+                      whiteSpace="nowrap"
+                      textOverflow="ellipsis"
+                    >
+                      <LinkIcon mr={2} />
 
-                    {formState.website}
-                  </Link>
-                </Flex>
+                      {formState.website}
+                    </Link>
+                  </Flex>
+                </Box>
               }
 
 
@@ -860,7 +919,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 :
                 formState.video &&
                 <Box
-                  mb={6} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
+                  mb={9} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
                   width="100%"
                   paddingTop="56.25%"
                   position="relative"
@@ -894,11 +953,16 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
               {/* DESCRIPTION */}
               <Box
-                mt={{
-                  base: 2,
-                  sm: 3
-                }}
+                mt={6}
               >
+                <FormLabel
+                  fontSize="sm"
+                  fontWeight="bold"
+                  color={eventPalette.fieldStyles.color}
+                >
+                  Description
+                </FormLabel>
+
                 <TextAreaField
                   isEditable={isEditable}
                   eventPalette={eventPalette}
@@ -934,7 +998,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
               {/* HOST & GUESTS */}
               {event && !isEditable &&
-                <Flex mt={3} direction="row" justifyContent="space-evenly" alignItems="center">
+                <Flex mt={6} direction="row" justifyContent="space-evenly" alignItems="center">
                   {event.host &&
                     <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
                       <StatLabel textAlign="center">Host</StatLabel>
@@ -990,10 +1054,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* COMMENTS */}
               {event && !isEditable &&
                 <FormControl
-                  mt={{
-                    base: 2,
-                    sm: 3
-                  }}
+                  mt={6}
                 >
                   <FormLabel
                     fontSize="sm"
@@ -1015,7 +1076,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
               {/* SHARE */}
               {event && !isEditable &&
                 <FormControl
-                  mt={3}
+                  mt={6}
                 >
                   <FormLabel
                     fontSize="sm"
@@ -1145,12 +1206,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 {user && isEditable && !isFormStateValid &&
                   <Box
                     mt={3}
-                    color={eventPalette.fieldStyles.color}
+                    color="red"
                   >
                     <InfoText
-                      text="Please make sure all required fields are filled in. Times must be selected in 15-minute intervals. 
-                    For one-time events, 
-                    the start date must be in the future and the event can not be longer than 1 day."
+                      text={formStateValidations.filter(formStateValidation => formStateValidation.condition !== true)[0].text}
                     />
                   </Box>
                 }
