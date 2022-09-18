@@ -192,11 +192,11 @@ router.post('/roleslots', async (req, res, next) => {
       try {
         const updatedEvent = await updateRoleSlot(parseInt(eventId), parseInt(roleSlotId), user);
 
-        if (updatedEvent) {
-          res.status(200).json(updatedEvent);
-        } else {
+        // if (updatedEvent) {
+          // res.status(200).json(updatedEvent);
+        // } else {
           res.status(400).json(null);
-        }
+        // }
       } catch (error) {
         res.send(error);
       }
