@@ -17,7 +17,6 @@ const Navbar = (navbarProps: NavbarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const landingPageMatch = useMatch(ROUTES.LANDING_PAGE);
   const eventsPageMatch = useMatch(ROUTES.EVENTS_PAGE);
   const eventsDetailModalNewMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL_NEW);
   const eventsDetailModalMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL);
@@ -87,103 +86,100 @@ const Navbar = (navbarProps: NavbarProps) => {
     <Box
       ref={navbarRef as unknown as React.LegacyRef<HTMLDivElement>}
     >
-      {!landingPageMatch &&
+      <Flex
+        direction="column"
+        bgColor="rgba(0, 0, 0, 0.4)"
+        px={{
+          base: 3,
+          sm: 6
+        }}
+        py={{
+          base: 1,
+          sm: 3
+        }}
+      >
         <Flex
-          direction="column"
-          bgColor="rgba(0, 0, 0, 0.4)"
-          px={{
-            base: 3,
-            sm: 6
-          }}
-          py={{
-            base: 1,
-            sm: 3
-          }}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <Flex
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Flex direction="row" alignItems="center">
-              <LinkBox>
-                <LinkOverlay href={ROUTES.LANDING_PAGE}>
-                  <Image
-                    src={`${process.env.PUBLIC_URL}/img/ffxiv-events.png`}
-                    borderRadius="full"
-                    boxSize={38}
-                    alt="FFXIV Events"
-                  />
-                </LinkOverlay>
-              </LinkBox>
+          <Flex direction="row" alignItems="center">
+            <LinkBox>
+              <LinkOverlay href={ROUTES.LANDING_PAGE}>
+                <Image
+                  src={`${process.env.PUBLIC_URL}/img/ffxiv-events.png`}
+                  borderRadius="full"
+                  boxSize={38}
+                  alt="FFXIV Events"
+                />
+              </LinkOverlay>
+            </LinkBox>
 
-              <Breadcrumb
-                fontSize={{
-                  base: "xs",
-                  md: "sm"
-                }}
-                color={COLORS.WHITE}
-                fontWeight="bold"
-                separator={<ChevronRightIcon />}
-              >
-                <BreadcrumbItem />
+            <Breadcrumb
+              fontSize={{
+                base: "xs",
+                md: "sm"
+              }}
+              color={COLORS.WHITE}
+              fontWeight="bold"
+              separator={<ChevronRightIcon />}
+            >
+              <BreadcrumbItem />
 
-                {isOnEvents ?
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href={ROUTES.EVENTS_PAGE}>Events</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  :
-                  communityPageMatch &&
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href={ROUTES.COMMUNITY_PAGE}>Community</BreadcrumbLink>
-                  </BreadcrumbItem>
-                }
-              </Breadcrumb>
-            </Flex>
+              {isOnEvents ?
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={ROUTES.EVENTS_PAGE}>Events</BreadcrumbLink>
+                </BreadcrumbItem>
+                :
+                communityPageMatch &&
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={ROUTES.COMMUNITY_PAGE}>Community</BreadcrumbLink>
+                </BreadcrumbItem>
+              }
+            </Breadcrumb>
+          </Flex>
 
-            {isOnEvents && user &&
-              <Show above="sm">
-                <TabsComponent />
-              </Show>
-            }
+          {isOnEvents && user &&
+            <Show above="sm">
+              <TabsComponent />
+            </Show>
+          }
 
-            <Flex direction="row">
-              {isOnEvents && user && (
-                <Box
-                  ml={{
-                    base: 2,
-                    sm: 3
-                  }}
-                >
-                  <EventsToolbox />
-                </Box>
-              )}
-
+          <Flex direction="row">
+            {isOnEvents && user && (
               <Box
                 ml={{
                   base: 2,
                   sm: 3
                 }}
               >
-                <UserMenu user={user} colorScheme="whiteAlpha" />
+                <EventsToolbox />
+              </Box>
+            )}
+
+            <Box
+              ml={{
+                base: 2,
+                sm: 3
+              }}
+            >
+              <UserMenu user={user} colorScheme="whiteAlpha" />
+            </Box>
+          </Flex>
+        </Flex>
+
+        {isOnEvents && user &&
+          <Hide above="sm">
+            <Flex
+              justifyContent="center"
+            >
+              <Box mx={3} my={1}>
+                <TabsComponent />
               </Box>
             </Flex>
-          </Flex>
-
-          {isOnEvents && user &&
-            <Hide above="sm">
-              <Flex
-                justifyContent="center"
-              >
-                <Box mx={3} my={1}>
-                  <TabsComponent />
-                </Box>
-              </Flex>
-            </Hide>
-          }
-        </Flex>
-      }
-
+          </Hide>
+        }
+      </Flex>
     </Box>
   );
 };

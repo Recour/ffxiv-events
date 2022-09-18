@@ -233,7 +233,9 @@ const App = () => {
               <Route
                 path={ROUTES.LANDING_PAGE}
                 element={
-                  <LandingPage />
+                  <LandingPage
+                    navbarHeight={navbarHeight}
+                  />
                 }
               />
 

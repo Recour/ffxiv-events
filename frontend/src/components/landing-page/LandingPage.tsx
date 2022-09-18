@@ -1,19 +1,18 @@
-import { ArrowForwardIcon, PlusSquareIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Flex, Heading, Image } from "@chakra-ui/react";
+import { PlusSquareIcon, QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons";
+import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../consts/routes";
 import { COLORS } from "../../styles/theme";
 import { EVENT_TYPES, EVENT_TYPES_TO_ARTICLES } from "../../types/EventType";
 
-const WIDTHS = {
-  base: "95%",
-  sm: "90%",
-  md: "80%",
-  lg: "60%"
-};
+interface LandingPageProps {
+  navbarHeight: number;
+}
 
-const LandingPage = () => {
+const LandingPage = (landingPageProps: LandingPageProps) => {
+  const { navbarHeight } = landingPageProps;
+
   const navigate = useNavigate();
 
   const [alternatingEventTypeIndex, setAlternatingEventTypeIndex] = useState<number>(0);
@@ -36,162 +35,126 @@ const LandingPage = () => {
 
   return (
     <>
-      {/* Set overflow hidden because scale() resizes the image */}
-      < Box overflow="hidden" >
-        <Image
-          height="100vh"
-          width="100vw"
-          objectFit="cover"
-          position="relative"
-          filter="blur(3px)"
-          transform="scale(1.1)"
-          background={`linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('${process.env.PUBLIC_URL}/img/ffxiv-crowd.png')`}
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          zIndex={-2}
-        />
-
+      <Flex
+        height={`calc(100vh - ${navbarHeight}px)`}
+        direction="column"
+        background="linear-gradient(31deg, rgba(0,0,0,1) 0%, rgba(4,4,54,1) 35%, rgba(3,86,103,1) 100%)"
+      >
         <Flex
-          position="absolute"
-          top="0"
-          left="0"
-          height="100vh"
-          width="100vw"
-          direction="column"
+          direction={{
+            base: "column",
+            sm: "row"
+          }}
+          height="100%"
           justifyContent="space-evenly"
+          alignItems="center"
         >
-          <Center
-            height="50%"
-          >
+          <img
+            alt="FFXIV Events"
+            src={`${process.env.PUBLIC_URL}/img/ffxiv-events2.png`}
+            height="25%"
+            width="25%"
+          />
+
+          <Flex direction="column">
+            <Heading
+              mt={{
+                base: 0,
+                sm: 3
+              }}
+              size={{
+                base: "sm",
+                sm: "lg"
+              }}
+              color={COLORS.GREY_LIGHT}
+            >
+              Host social events, raids and more
+            </Heading>
+
             <Flex
               direction="column"
-              width={WIDTHS}
-              alignItems="space-around"
+              mt={{
+                base: 6,
+                sm: 12
+              }}
+              alignItems="flex-start"
             >
-              <Heading
-                size={{
-                  base: "lg",
-                  sm: "4xl"
+              <Button
+                colorScheme="whiteAlpha"
+                color={COLORS.GREY_LIGHT}
+                variant="outline"
+                rightIcon={<SearchIcon />}
+                size="lg"
+                onClick={() => {
+                  navigate(ROUTES.EVENTS_PAGE);
                 }}
-                color={COLORS.WHITE}
+                textAlign="start"
+                py={2}
+                height="100%"
+                justifyContent="space-between"
+                width={{
+                  base: "100%",
+                  sm: "auto"
+                }}
               >
-                FFXIV Events
-              </Heading>
+                <Box width={160}>
+                  I'm looking for {EVENT_TYPES_TO_ARTICLES[Object.values(EVENT_TYPES)[alternatingEventTypeIndex]]}<br />
+                  {Object.values(EVENT_TYPES)[alternatingEventTypeIndex]}
+                </Box>
+              </Button>
 
-              <Heading
+              <Button
                 mt={{
-                  base: 0,
+                  base: 2,
                   sm: 3
                 }}
-                size={{
-                  base: "sm",
-                  sm: "lg"
+                rightIcon={<PlusSquareIcon />}
+                colorScheme="whiteAlpha"
+                variant="outline"
+                size="lg"
+                onClick={() => navigate(ROUTES.EVENTS_DETAIL_MODAL_NEW)}
+                justifyContent="space-between"
+                width={{
+                  base: "100%",
+                  sm: "auto"
                 }}
-                color={COLORS.WHITE}
               >
-                Host social events, raids and more
-              </Heading>
+                I want to host an event
+              </Button>
 
-              <Flex
-                direction={{
-                  base: "column",
-                  sm: "row"
-                }}
+              <Button
                 mt={{
-                  base: 6,
-                  sm: 12
+                  base: 2,
+                  sm: 3
                 }}
-                alignItems="center"
-                justifyContent={{
-                  base: "space-between",
-                  sm: "flex-start"
+                colorScheme="whiteAlpha"
+                variant="outline"
+                rightIcon={<QuestionOutlineIcon />}
+                size="lg"
+                onClick={() => navigate(ROUTES.COMMUNITY_PAGE)}
+                justifyContent="space-between"
+                width={{
+                  base: "100%",
+                  sm: "auto"
                 }}
               >
-                <Button
-                  colorScheme="whiteAlpha"
-                  rightIcon={<ArrowForwardIcon />}
-                  size="lg"
-                  onClick={() => {
-                    navigate(ROUTES.EVENTS_PAGE);
-                  }}
-                  textAlign="start"
-                  py={2}
-                  height="100%"
-                  justifyContent="space-between"
-                  width={{
-                    base: "100%",
-                    sm: "auto"
-                  }}
-                >
-                  <Box width={160}>
-                    I'm looking for {EVENT_TYPES_TO_ARTICLES[Object.values(EVENT_TYPES)[alternatingEventTypeIndex]]}<br />
-                    {Object.values(EVENT_TYPES)[alternatingEventTypeIndex]}
-                  </Box>
-                </Button>
-
-                <Button
-                  ml={{
-                    base: 0,
-                    sm: 3
-                  }}
-                  mt={{
-                    base: 2,
-                    sm: 0
-                  }}
-                  rightIcon={<PlusSquareIcon />}
-                  colorScheme="blackAlpha"
-                  color={COLORS.WHITE}
-                  size="lg"
-                  onClick={() => navigate(ROUTES.EVENTS_DETAIL_MODAL_NEW)}
-                  justifyContent="space-between"
-                  width={{
-                    base: "100%",
-                    sm: "auto"
-                  }}
-                >
-                  I want to host an event
-                </Button>
-
-                <Button
-                  ml={{
-                    base: 0,
-                    sm: 3
-                  }}
-                  mt={{
-                    base: 2,
-                    sm: 0
-                  }}
-                  colorScheme="blackAlpha"
-                  rightIcon={<QuestionOutlineIcon />}
-                  color={COLORS.WHITE}
-                  size="lg"
-                  onClick={() => navigate(ROUTES.COMMUNITY_PAGE)}
-                  justifyContent="space-between"
-                  width={{
-                    base: "100%",
-                    sm: "auto"
-                  }}
-                >
-                  What is FFXIV Events
-                </Button>
-              </Flex>
+                What is FFXIV Events
+              </Button>
             </Flex>
-          </Center>
+          </Flex>
+        </Flex>
 
-          {/* <Center
+        {/* <Center
             height="50%"
             alignItems="flex-start"
           >
             <Flex
               mt={3}
-              width={WIDTHS}
             >
               <EventTabs />
             </Flex>
           </Center> */}
-        </Flex>
-      </Box >
+      </Flex>
     </>
   );
 }
