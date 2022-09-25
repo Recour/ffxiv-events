@@ -82,41 +82,49 @@ const INITIAL_FORM_STATE: NewEvent = {
   recurrings: [],
   roleSlots: [
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null
     },
     {
+      id: '',
       jobId: null,
       isOpen: true,
       guest: null

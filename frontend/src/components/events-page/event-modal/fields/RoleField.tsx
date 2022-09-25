@@ -33,31 +33,31 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
   const { eventPalette, classes, roleSlots, setRoleSlots } = roleFieldProps;
 
   const [selectedPartyType, setSelectedPartyType] = useState<PartyType>(() => {
-    const initialPartyTypeKey = Object.keys(PARTY_TYPES).find(partyTypeKey => PARTY_TYPES[partyTypeKey].numberOfPlayers === roleSlots.length);
+    // const initialPartyTypeKey = Object.keys(PARTY_TYPES).find(partyTypeKey => PARTY_TYPES[partyTypeKey].numberOfPlayers === roleSlots.length);
 
-    if (initialPartyTypeKey) {
-      return PARTY_TYPES[initialPartyTypeKey];
-    } else {
+    // if (initialPartyTypeKey) {
+    //   return PARTY_TYPES[initialPartyTypeKey];
+    // } else {
       return PARTY_TYPES.FULL;
-    }
+    // }
   });
 
   useEffect(() => {
-    const newSelectedRoleSlots = [];
+    // const newSelectedRoleSlots = [];
 
-    for (let i = 0; i < selectedPartyType.numberOfPlayers; i++) {
-      if (roleSlots[i]) {
-        newSelectedRoleSlots.push(roleSlots[i]);
-      } else {
-        newSelectedRoleSlots.push({
-          jobId: null,
-          isOpen: true,
-          guest: null
-        });
-      }
-    }
+    // for (let i = 0; i < selectedPartyType.numberOfPlayers; i++) {
+    //   if (roleSlots[i]) {
+    //     newSelectedRoleSlots.push(roleSlots[i]);
+    //   } else {
+    //     newSelectedRoleSlots.push({
+    //       jobId: null,
+    //       isOpen: true,
+    //       guest: null
+    //     });
+    //   }
+    // }
 
-    setRoleSlots(newSelectedRoleSlots);
+    // setRoleSlots(newSelectedRoleSlots);
   },
     // Disable selectedRoleSlots missing from dependency array warning because we one want updates on the selected party type.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,7 +120,7 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
         }}
         direction="row"
       >
-        {roleSlots.map((roleSlot, roleSlotIndex) => {
+        {/* {roleSlots.map((roleSlot, roleSlotIndex) => {
           const job = roleSlot.jobId && classes.find(job => job.ID === roleSlot.jobId);
 
           return (
@@ -221,7 +221,7 @@ const RoleField = (roleFieldProps: RoleFieldProps) => {
               </MenuList>
             </Menu>
           )
-        })}
+        })} */}
       </Flex>
     </Flex>
   );

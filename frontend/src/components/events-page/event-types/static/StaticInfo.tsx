@@ -65,7 +65,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
             mt={3}
             direction="row"
           >
-            {formState.roleSlots.map((roleSlot, index) => {
+            {/* {formState.roleSlots.map((roleSlot, index) => {
               const job = classes.find(job => job.ID === roleSlot.jobId);
 
               return (
@@ -130,7 +130,7 @@ const StaticInfo = (staticInfoProps: EventTypeInfoProps) => {
                   />
                 </Tooltip>
               );
-            })}
+            })} */}
           </Flex>
         </Flex>
       }
