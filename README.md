@@ -1,8 +1,15 @@
 # FFXIV Events
 
+> [!WARNING] 
+>
+> This project is not maintained anymore.
+> It was deployed to Heroku until they got rid of their free plan.
+> The FFXIV Events frontend application is now deployed to Render,
+> but it's not connected to the backend or database.
+
 Event sharing tool for FFXIV. Share social events, raids and more.
 
-https://www.ffxiv-events.com
+https://ffxiv-events-frontend.onrender.com/
 
 ## Repository
 
