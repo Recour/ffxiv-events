@@ -2,7 +2,7 @@
 
 > [!WARNING] 
 >
-> This project is not maintained anymore.
+> This project is not actively maintained.
 > It was deployed to Heroku until they got rid of their free plan.
 > The FFXIV Events frontend application is now deployed to Render,
 > but it's not connected to the backend or database.
