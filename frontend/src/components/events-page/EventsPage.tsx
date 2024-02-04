@@ -18,15 +18,30 @@ import {
   Show,
   Text,
 } from "@chakra-ui/react";
-import { useState, useEffect, Dispatch, SetStateAction, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+} from "react";
 import { DataCenter } from "../../types/DataCenter";
 import EventsGrid from "./EventsGrid";
-import SortMenu, { SortOption, SortOrder, SORT_OPTIONS, SORT_ORDERS } from "./filters/SortMenu";
+import SortMenu, {
+  SortOption,
+  SortOrder,
+  SORT_OPTIONS,
+  SORT_ORDERS,
+} from "./filters/SortMenu";
 import { Outlet, useMatch } from "react-router-dom";
 import { WorldServer } from "../../types/WorldServer";
-import { Event } from "../../types/Event";
+import { DUMMY_EVENT, Event } from "../../types/Event";
 import { COLORS } from "../../styles/theme";
-import { EventType, EVENT_TYPES_TO_ARTICLES } from "../../types/EventType";
+import {
+  EventType,
+  EVENT_TYPES_TO_ARTICLES,
+  EVENT_TYPES,
+} from "../../types/EventType";
 import { EventFilters, EVENT_FIELDS, getEvents } from "../../database/events";
 import EventFilterList from "./filters/EventFilterList";
 import { TreasureMap } from "../../types/TreasureMap";
@@ -35,6 +50,7 @@ import { ROUTES } from "../../consts/routes";
 import { MdFilterList } from "@react-icons/all-files/md/MdFilterList";
 import EventTypeSelect from "./filters/EventTypeSelect";
 import ServerMenu from "./filters/ServerMenu";
+import { DEMO_EVENTS } from "../../consts/demo";
 
 const EVENT_PAGE_LIMIT = 25;
 
@@ -50,24 +66,45 @@ interface EventPageProps {
 }
 
 const EventsPage = (eventPageProps: EventPageProps) => {
-  const { dataCenters, maps, worldServers, treasureMaps, setDataCenters, navbarHeight, refetchEvents } = eventPageProps;
+  const {
+    dataCenters,
+    maps,
+    worldServers,
+    treasureMaps,
+    setDataCenters,
+    navbarHeight,
+    refetchEvents,
+  } = eventPageProps;
   const eventsPageMatch = useMatch(ROUTES.EVENTS_PAGE);
   const eventsAttendingMatch = useMatch(ROUTES.EVENTS_ATTENDING);
   const eventsDetailModalNewMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL_NEW);
-  const eventsDetailModalIntegratedMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL_INTEGRATED);
+  const eventsDetailModalIntegratedMatch = useMatch(
+    ROUTES.EVENTS_DETAIL_MODAL_INTEGRATED
+  );
   const eventsDetailModalMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL);
-  const isOnEventsPageOrEventsDetailModal = eventsPageMatch
-    || eventsDetailModalNewMatch
-    || eventsDetailModalIntegratedMatch
-    || (eventsDetailModalMatch && (eventsDetailModalMatch.params.id && !isNaN(parseInt(eventsDetailModalMatch.params.id))));
+  const isOnEventsPageOrEventsDetailModal =
+    eventsPageMatch ||
+    eventsDetailModalNewMatch ||
+    eventsDetailModalIntegratedMatch ||
+    (eventsDetailModalMatch &&
+      eventsDetailModalMatch.params.id &&
+      !isNaN(parseInt(eventsDetailModalMatch.params.id)));
 
   // SORTING & FILTERING STATE
-  const [selectedSortOption, setSelectedSortOption] = useState<SortOption>(SORT_OPTIONS.NUMBER_OF_GUESTS);
-  const [selectedSortOrder, setSelectedSortOrder] = useState<SortOrder>(SORT_ORDERS.DESCENDING);
-  const [selectedEventType, setSelectedEventType] = useState<EventType | null>(null);
+  const [selectedSortOption, setSelectedSortOption] = useState<SortOption>(
+    SORT_OPTIONS.NUMBER_OF_GUESTS
+  );
+  const [selectedSortOrder, setSelectedSortOrder] = useState<SortOrder>(
+    SORT_ORDERS.DESCENDING
+  );
+  const [selectedEventType, setSelectedEventType] = useState<EventType | null>(
+    null
+  );
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [adultOnly, setAdultOnly] = useState<boolean>(false);
-  const [selectedTreasureMaps, setSelectedTreasureMaps] = useState<TreasureMap[]>([]);
+  const [selectedTreasureMaps, setSelectedTreasureMaps] = useState<
+    TreasureMap[]
+  >([]);
   const [selectedMaps, setSelectedMaps] = useState<string[]>([]);
   const [onlyLiveEvents, setOnlyLiveEvents] = useState<boolean>(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
@@ -81,17 +118,18 @@ const EventsPage = (eventPageProps: EventPageProps) => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState<boolean>(false);
 
-  const ShowingResultsComponent = () =>
+  const ShowingResultsComponent = () => (
     <Text
       mt={{
         base: 0,
-        sm: 3
+        sm: 3,
       }}
       fontSize="xs"
       color={COLORS.WHITE}
     >
       Showing {events.length} of {count} results
-    </Text>;
+    </Text>
+  );
 
   const fetchEvents = useCallback(async () => {
     // If the offset didn't change, fetchEvents is being called because of other changes (filters, sorting, etc).
@@ -131,27 +169,30 @@ const EventsPage = (eventPageProps: EventPageProps) => {
 
     setIsLoadingEvents(true);
 
-    const { rows, count } = await getEvents(
-      EVENT_PAGE_LIMIT,
-      offset,
-      selectedSortOption.value,
-      selectedSortOrder.value,
-      filters,
-      onlyLiveEvents,
-      false,
-      false,
-      {}
-    );
+    // Comment for demo purposes
+    // const { rows, count } = await getEvents(
+    //   EVENT_PAGE_LIMIT,
+    //   offset,
+    //   selectedSortOption.value,
+    //   selectedSortOrder.value,
+    //   filters,
+    //   onlyLiveEvents,
+    //   false,
+    //   false,
+    //   {}
+    // );
 
-    setEvents(eventsState => {
-      if (offset === 0) {
-        return rows;
-      } else {
-        return [...eventsState, ...rows];
-      }
-    });
+    // setEvents(eventsState => {
+    //   if (offset === 0) {
+    //     return rows;
+    //   } else {
+    //     return [...eventsState, ...rows];
+    //   }
+    setEvents(DEMO_EVENTS);
 
-    setCount(count);
+    // Comment for demo purposes
+    // setCount(count);
+    setCount(DEMO_EVENTS.length)
 
     setIsLoadingEvents(false);
 
@@ -167,16 +208,21 @@ const EventsPage = (eventPageProps: EventPageProps) => {
     offset,
     selectedSortOption.value,
     selectedSortOrder.value,
-    onlyLiveEvents
+    onlyLiveEvents,
   ]);
 
-  const onChangeSelectedWorldServers = (dataCenter: DataCenter, worldServerNames: string[]) => {
+  const onChangeSelectedWorldServers = (
+    dataCenter: DataCenter,
+    worldServerNames: string[]
+  ) => {
     const dataCentersCopy = [...dataCenters];
 
-    const foundDataCenter = dataCentersCopy.find((dataCentersCopyEntry) => dataCentersCopyEntry === dataCenter);
+    const foundDataCenter = dataCentersCopy.find(
+      (dataCentersCopyEntry) => dataCentersCopyEntry === dataCenter
+    );
 
     if (foundDataCenter) {
-      foundDataCenter.worldServers.forEach(worldServer => {
+      foundDataCenter.worldServers.forEach((worldServer) => {
         worldServer.selected = worldServerNames.includes(worldServer.name);
       });
 
@@ -185,30 +231,31 @@ const EventsPage = (eventPageProps: EventPageProps) => {
   };
 
   // EVENTS
-  useEffect(() => {
-    (async () => {
-      await fetchEvents();
+  useEffect(
+    () => {
+      (async () => {
+        await fetchEvents();
 
-      // const ffxivRpFeed = await axios.get('https://api.ffxiv-rp.org/api/Events/GetWeekTranslatableEvents', {
-      //   withCredentials: false
-      // });
+        // const ffxivRpFeed = await axios.get('https://api.ffxiv-rp.org/api/Events/GetWeekTranslatableEvents', {
+        //   withCredentials: false
+        // });
 
-      // const rawEvents: FfxivRpEvent[] = ffxivRpFeed.data;
+        // const rawEvents: FfxivRpEvent[] = ffxivRpFeed.data;
 
-      // const transformedEvents = rawEvents.map(rawEvent => transformFfxivRpEvent(rawEvent));
+        // const transformedEvents = rawEvents.map(rawEvent => transformFfxivRpEvent(rawEvent));
 
-      // const distinctFfxivRpEvents = transformedEvents.filter((value, index, self) => {
-      //   return self.findIndex(ffxivRpEvent => ffxivRpEvent.name === value.name) === index;
-      // });
+        // const distinctFfxivRpEvents = transformedEvents.filter((value, index, self) => {
+        //   return self.findIndex(ffxivRpEvent => ffxivRpEvent.name === value.name) === index;
+        // });
 
-      // const shuffledDistinctFfxivRpEvents = distinctFfxivRpEvents
-      //   .map(value => ({ value, sort: Math.random() }))
-      //   .sort((a, b) => a.sort - b.sort)
-      //   .map(({ value }) => value)
+        // const shuffledDistinctFfxivRpEvents = distinctFfxivRpEvents
+        //   .map(value => ({ value, sort: Math.random() }))
+        //   .sort((a, b) => a.sort - b.sort)
+        //   .map(({ value }) => value)
 
-      // setFfxivRpEvents(shuffledDistinctFfxivRpEvents);
-    })();
-  },
+        // setFfxivRpEvents(shuffledDistinctFfxivRpEvents);
+      })();
+    },
 
     // Disable fetchEvents missing from dependency array warning because otherwise it does a few API requests.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -216,14 +263,12 @@ const EventsPage = (eventPageProps: EventPageProps) => {
   );
 
   return (
-    <Box
-      height={`calc(100vh - ${navbarHeight}px)`}
-    >
+    <Box height={`calc(100vh - ${navbarHeight}px)`}>
       <Flex
         direction="column"
         p={{
           base: 3,
-          sm: 6
+          sm: 6,
         }}
         position="absolute"
         top={`${navbarHeight}px`}
@@ -234,46 +279,38 @@ const EventsPage = (eventPageProps: EventPageProps) => {
         <Flex
           direction={{
             base: "column",
-            sm: "row"
+            sm: "row",
           }}
           justifyContent={{
             base: "space-between",
-            sm: "flex-start"
+            sm: "flex-start",
           }}
           alignItems={{
             base: "center",
-            sm: "flex-end"
+            sm: "flex-end",
           }}
         >
-          {isOnEventsPageOrEventsDetailModal ?
+          {isOnEventsPageOrEventsDetailModal ? (
             <Flex
               direction={{
                 base: "column",
-                sm: "row"
+                sm: "row",
               }}
               alignItems={{
                 base: "center",
-                sm: "flex-end"
+                sm: "flex-end",
               }}
               minWidth="fit-content"
             >
-              <Flex
-                direction="row"
-                alignItems="center"
-                minWidth="fit-content"
-
-              >
-                <Heading
-                  size="md"
-                  color={COLORS.WHITE}
-                  minWidth="fit-content"
-                >
-                  I'm looking for {selectedEventType ? EVENT_TYPES_TO_ARTICLES[selectedEventType] : ""}
+              <Flex direction="row" alignItems="center" minWidth="fit-content">
+                <Heading size="md" color={COLORS.WHITE} minWidth="fit-content">
+                  I'm looking for{" "}
+                  {selectedEventType
+                    ? EVENT_TYPES_TO_ARTICLES[selectedEventType]
+                    : ""}
                 </Heading>
 
-                <Box
-                  ml={2}
-                >
+                <Box ml={2}>
                   <EventTypeSelect
                     selectedEventType={selectedEventType}
                     setSelectedEventType={setSelectedEventType}
@@ -281,11 +318,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 </Box>
 
                 <Hide below="md">
-                  <Heading
-                    ml={2}
-                    size="md"
-                    color={COLORS.WHITE}
-                  >
+                  <Heading ml={2} size="md" color={COLORS.WHITE}>
                     on
                   </Heading>
                 </Hide>
@@ -294,29 +327,22 @@ const EventsPage = (eventPageProps: EventPageProps) => {
               <Flex
                 mt={{
                   base: 1,
-                  sm: 0
+                  sm: 0,
                 }}
                 ml={{
                   base: 0,
-                  sm: 2
+                  sm: 2,
                 }}
                 direction="row"
                 alignItems="center"
               >
                 <Hide above="sm">
-                  <Heading
-                    mr={2}
-                    size="md"
-                    color={COLORS.WHITE}
-                  >
+                  <Heading mr={2} size="md" color={COLORS.WHITE}>
                     on
                   </Heading>
                 </Hide>
 
-                <Box
-                  maxWidth="300px"
-                  height="40px"
-                >
+                <Box maxWidth="300px" height="40px">
                   <ServerMenu
                     dataCenters={dataCenters}
                     onChangeSelectedWorldServers={onChangeSelectedWorldServers}
@@ -324,9 +350,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 </Box>
               </Flex>
 
-              <Show
-                below="md"
-              >
+              <Show below="md">
                 <Flex mt={1} justifyContent="center" width="100%">
                   <Button
                     aria-label="Filter"
@@ -344,9 +368,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 >
                   <ModalOverlay />
 
-                  <ModalContent
-                    bgColor={COLORS.GREY_DARK}
-                  >
+                  <ModalContent bgColor={COLORS.GREY_DARK}>
                     <ModalHeader />
 
                     <ModalCloseButton color={COLORS.WHITE} />
@@ -370,16 +392,11 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                       />
 
                       <Box mt={6}>
-                        <Heading
-                          size="md"
-                          color={COLORS.WHITE}
-                        >
+                        <Heading size="md" color={COLORS.WHITE}>
                           Sort
                         </Heading>
 
-                        <Box
-                          mt={3}
-                        >
+                        <Box mt={3}>
                           <SortMenu
                             selectedSortOption={selectedSortOption}
                             selectedSortOrder={selectedSortOrder}
@@ -395,29 +412,22 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 </Modal>
               </Show>
             </Flex>
-            :
-            <Heading
-              color={COLORS.WHITE}
-              whiteSpace="nowrap"
-            >
-              {eventsAttendingMatch ?
-                ("Attending")
-                :
-                ("Hosting")
-              }
+          ) : (
+            <Heading color={COLORS.WHITE} whiteSpace="nowrap">
+              {eventsAttendingMatch ? "Attending" : "Hosting"}
             </Heading>
-          }
+          )}
 
-          {isOnEventsPageOrEventsDetailModal &&
+          {isOnEventsPageOrEventsDetailModal && (
             <>
               <Progress
                 ml={{
                   base: 0,
-                  sm: 3
+                  sm: 3,
                 }}
                 mt={{
                   base: 3,
-                  sm: 0
+                  sm: 0,
                 }}
                 isIndeterminate={isLoadingEvents}
                 size="xs"
@@ -427,13 +437,11 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 width="100%"
               />
 
-              <Show
-                above="sm"
-              >
+              <Show above="sm">
                 <Box
                   ml={{
                     base: 3,
-                    sm: 3
+                    sm: 3,
                   }}
                 >
                   <SortMenu
@@ -445,22 +453,22 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                 </Box>
               </Show>
             </>
-          }
+          )}
         </Flex>
 
-        {isOnEventsPageOrEventsDetailModal ?
+        {isOnEventsPageOrEventsDetailModal ? (
           <>
             <Grid
               mt={3}
               templateColumns={{
                 base: "1fr",
-                sm: "minmax(0, 2fr) 10fr"
+                sm: "minmax(0, 2fr) 10fr",
               }}
               gap={3}
               overflow="hidden"
               height={{
                 base: "auto",
-                sm: "100%"
+                sm: "100%",
               }}
             >
               <GridItem>
@@ -472,7 +480,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                   backgroundColor="rgba(0, 0, 0, 0.4)"
                   p={{
                     base: 0,
-                    sm: 3
+                    sm: 3,
                   }}
                 >
                   <Hide below="md">
@@ -498,7 +506,7 @@ const EventsPage = (eventPageProps: EventPageProps) => {
                     direction="row"
                     justifyContent={{
                       base: "flex-start",
-                      sm: "center"
+                      sm: "center",
                     }}
                   >
                     <ShowingResultsComponent />
@@ -513,7 +521,9 @@ const EventsPage = (eventPageProps: EventPageProps) => {
               >
                 <EventsGrid
                   events={events}
-                  fetchMoreEvents={() => setOffset(prevOffset => prevOffset + EVENT_PAGE_LIMIT)}
+                  fetchMoreEvents={() =>
+                    setOffset((prevOffset) => prevOffset + EVENT_PAGE_LIMIT)
+                  }
                   hasMore={offset <= count}
                 />
               </GridItem>
@@ -521,11 +531,11 @@ const EventsPage = (eventPageProps: EventPageProps) => {
 
             <Outlet />
           </>
-          :
+        ) : (
           <Outlet />
-        }
-      </Flex >
-    </Box >
+        )}
+      </Flex>
+    </Box>
   );
 };
 

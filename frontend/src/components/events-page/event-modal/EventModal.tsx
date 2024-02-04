@@ -20,12 +20,17 @@ import {
   StatLabel,
   StatNumber,
   CircularProgress,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { SetStateAction, useCallback, useEffect, useState } from "react";
 import { WorldServer } from "../../../types/WorldServer";
 import moment from "moment";
-import { useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useMatch,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import {
   CheckIcon,
   CopyIcon,
@@ -40,7 +45,14 @@ import { TreasureMap } from "../../../types/TreasureMap";
 import EventTypeInfo from "../event-types/EventTypeInfo";
 import { COLORS } from "../../../styles/theme";
 import { ROUTES } from "../../../consts/routes";
-import { createEvent, deleteEvent, getEvent, toggleAttendingEvent, toggleAttendingRoleSlot, updateEvent } from "../../../database/events";
+import {
+  createEvent,
+  deleteEvent,
+  getEvent,
+  toggleAttendingEvent,
+  toggleAttendingRoleSlot,
+  updateEvent,
+} from "../../../database/events";
 import { User } from "../../../types/User";
 import { isHost } from "../../../helpers/isHost";
 import { isHousingDistrict } from "../../../helpers/isHousingDistrict";
@@ -64,8 +76,11 @@ import { TIME_FORMAT } from "./fields/frequency/DateTimeField";
 import { Class } from "../../../types/Class";
 import CustomizationField from "./fields/CustomizationField";
 import { EVENT_PALETTES } from "../../../types/EventPalette";
+import { DEMO_EVENTS } from "../../../consts/demo";
 
-export const EARLIEST_START_TIME = moment.utc().add(15 - (moment.utc().minute() % 15), "minutes");
+export const EARLIEST_START_TIME = moment
+  .utc()
+  .add(15 - (moment.utc().minute() % 15), "minutes");
 export const EARLIEST_END_TIME = EARLIEST_START_TIME.clone().add(1, "hour");
 
 const INITIAL_FORM_STATE: NewEvent = {
@@ -82,52 +97,52 @@ const INITIAL_FORM_STATE: NewEvent = {
   recurrings: [],
   roleSlots: [
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
     {
-      id: '',
+      id: "",
       jobId: null,
       isOpen: true,
-      guest: null
+      guest: null,
     },
   ],
   palette: Object.keys(EVENT_PALETTES)[0],
@@ -145,7 +160,7 @@ const INITIAL_FORM_STATE: NewEvent = {
   adultOnly: false,
 
   // NIGHT CLUB
-  genres: []
+  genres: [],
 };
 
 interface CopyButtonState {
@@ -158,13 +173,13 @@ const COPY_BUTTON_STATES: { [key: string]: CopyButtonState } = {
   COPY_LINK: {
     icon: <CopyIcon />,
     colorScheme: "blackAlpha",
-    text: "Copy link"
+    text: "Copy link",
   },
   COPIED: {
     icon: <CheckIcon />,
     colorScheme: "green",
-    text: "Copied"
-  }
+    text: "Copied",
+  },
 };
 
 interface FormStateValidation {
@@ -188,20 +203,33 @@ interface EventModalProps {
 const EventModal = (eventModalProps: EventModalProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const toast = useToast()
+  const toast = useToast();
   const { id } = useParams();
   const eventsDetailModalNewMatch = useMatch(ROUTES.EVENTS_DETAIL_MODAL_NEW);
 
-  const { worldServers, maps, treasureMaps, classes, user, refetchEventsTrigger } = eventModalProps;
+  const {
+    worldServers,
+    maps,
+    treasureMaps,
+    classes,
+    user,
+    refetchEventsTrigger,
+  } = eventModalProps;
 
   const [event, setEvent] = useState<Event | null>(null);
   const [formState, setFormState] = useState<NewEvent>(INITIAL_FORM_STATE);
-  const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(null);
-  const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>(COPY_BUTTON_STATES.COPY_LINK);
+  const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(
+    null
+  );
+  const [copyButtonState, setCopyButtonState] = useState<CopyButtonState>(
+    COPY_BUTTON_STATES.COPY_LINK
+  );
   const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [isViewingAsUser, setIsViewingAsUser] = useState<boolean>(eventsDetailModalNewMatch ? false : true);
+  const [isViewingAsUser, setIsViewingAsUser] = useState<boolean>(
+    eventsDetailModalNewMatch ? false : true
+  );
 
   const eventPalette = EVENT_PALETTES[formState.palette];
 
@@ -215,58 +243,61 @@ const EventModal = (eventModalProps: EventModalProps) => {
   const formStateValidations: FormStateValidation[] = [
     {
       text: "You must be signed in.",
-      condition: !!user
+      condition: !!user,
     },
     {
       text: "Name cannot be empty.",
-      condition: !!formState.name
+      condition: !!formState.name,
     },
     {
       text: "Event type cannot be empty.",
-      condition: !!formState.type
+      condition: !!formState.type,
     },
     {
       text: "Server cannot be empty.",
-      condition: !!formState.server
+      condition: !!formState.server,
     },
     {
       text: "Map cannot be empty.",
-      condition: !!formState.map
+      condition: !!formState.map,
     },
     {
       text: "Start time cannot be empty.",
-      condition: !!formState.startTime
+      condition: !!formState.startTime,
     },
     {
       text: "End time cannot be empty.",
-      condition: !!formState.endTime
+      condition: !!formState.endTime,
     },
     {
       text: "Description cannot be empty.",
-      condition: !!formState.description
-    }
+      condition: !!formState.description,
+    },
   ];
 
   if (!formState.comingSoon) {
     // Times must be selected in 15-minute intervals
-    const fifteenMinuteIntervalText = "Times must start at 0, 15, 30 or 45 minutes."
+    const fifteenMinuteIntervalText =
+      "Times must start at 0, 15, 30 or 45 minutes.";
     formStateValidations.push({
       text: fifteenMinuteIntervalText,
-      condition: moment.utc(formState.startTime).minutes() % 15 === 0
+      condition: moment.utc(formState.startTime).minutes() % 15 === 0,
     });
     formStateValidations.push({
       text: fifteenMinuteIntervalText,
-      condition: moment.utc(formState.endTime).minutes() % 15 === 0
+      condition: moment.utc(formState.endTime).minutes() % 15 === 0,
     });
 
-    formState.recurrings.forEach(recurring => {
+    formState.recurrings.forEach((recurring) => {
       formStateValidations.push({
         text: fifteenMinuteIntervalText,
-        condition: moment.utc(recurring.startTime, TIME_FORMAT).minutes() % 15 === 0
+        condition:
+          moment.utc(recurring.startTime, TIME_FORMAT).minutes() % 15 === 0,
       });
       formStateValidations.push({
         text: fifteenMinuteIntervalText,
-        condition: moment.utc(recurring.endTime, TIME_FORMAT).minutes() % 15 === 0
+        condition:
+          moment.utc(recurring.endTime, TIME_FORMAT).minutes() % 15 === 0,
       });
     });
 
@@ -274,20 +305,28 @@ const EventModal = (eventModalProps: EventModalProps) => {
       // Additional time checks for one-time events
       formStateValidations.push({
         text: "Start time cannot be in the past.",
-        condition: moment.utc(formState.startTime).isAfter(moment.utc())
+        condition: moment.utc(formState.startTime).isAfter(moment.utc()),
       });
       formStateValidations.push({
         text: "End time cannot be before start time.",
-        condition: moment.utc(formState.startTime).isBefore(moment.utc(formState.endTime))
+        condition: moment
+          .utc(formState.startTime)
+          .isBefore(moment.utc(formState.endTime)),
       });
       formStateValidations.push({
         text: "End time cannot be more than 24 hours after start time.",
-        condition: moment.utc(formState.endTime).clone().subtract(1, "day").isBefore(moment.utc(formState.startTime))
+        condition: moment
+          .utc(formState.endTime)
+          .clone()
+          .subtract(1, "day")
+          .isBefore(moment.utc(formState.startTime)),
       });
     }
   }
 
-  const isFormStateValid = formStateValidations.every(formStateValidation => formStateValidation.condition === true);
+  const isFormStateValid = formStateValidations.every(
+    (formStateValidation) => formStateValidation.condition === true
+  );
 
   const closeModal = useCallback(() => {
     navigate(ROUTES.EVENTS_PAGE);
@@ -325,17 +364,21 @@ const EventModal = (eventModalProps: EventModalProps) => {
         adultOnly: formState.adultOnly,
 
         // NIGHT CLUB
-        genres: formState.genres
+        genres: formState.genres,
       };
 
-      const eventAction = event ? updateEvent({ ...event, ...newEvent }, backgroundImageFile) : createEvent(newEvent, backgroundImageFile);
+      const eventAction = event
+        ? updateEvent({ ...event, ...newEvent }, backgroundImageFile)
+        : createEvent(newEvent, backgroundImageFile);
 
       try {
         await eventAction;
 
         toast({
           title: `Event ${event ? "updated" : "created"}!`,
-          description: `Your event has been successfully ${event ? "updated" : "created"}.`,
+          description: `Your event has been successfully ${
+            event ? "updated" : "created"
+          }.`,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -343,7 +386,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
       } catch (error) {
         toast({
           title: `Could not ${event ? "update" : "create"} your event.`,
-          description: `Something went wrong while trying to ${event ? "update" : "create"} your event.`,
+          description: `Something went wrong while trying to ${
+            event ? "update" : "create"
+          } your event.`,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -354,7 +399,15 @@ const EventModal = (eventModalProps: EventModalProps) => {
       closeModal();
       refetchEventsTrigger((refetchEvents) => !refetchEvents);
     }
-  }, [isFormStateValid, event, formState, backgroundImageFile, toast, closeModal, refetchEventsTrigger]);
+  }, [
+    isFormStateValid,
+    event,
+    formState,
+    backgroundImageFile,
+    toast,
+    closeModal,
+    refetchEventsTrigger,
+  ]);
 
   const handleClickCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -362,7 +415,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
     setCopyButtonState(COPY_BUTTON_STATES.COPIED);
     setTimeout(() => {
       setCopyButtonState(COPY_BUTTON_STATES.COPY_LINK);
-    }, 2000)
+    }, 2000);
   };
 
   const handleClickAttend = async (user: User, event: Event) => {
@@ -374,7 +427,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
       toast({
         title: userIsGuest ? "Removed as guest." : "Added as guest!",
-        description: `You are ${userIsGuest ? "no longer attending" : "now attending"} ${event.name}.`,
+        description: `You are ${
+          userIsGuest ? "no longer attending" : "now attending"
+        } ${event.name}.`,
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -382,7 +437,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
     } catch (error) {
       toast({
         title: `Could not ${userIsGuest ? "remove" : "add"} you as guest.`,
-        description: `Something went wrong while trying to ${userIsGuest ? "remove" : "add"} you as a guest to ${event.name}.`,
+        description: `Something went wrong while trying to ${
+          userIsGuest ? "remove" : "add"
+        } you as a guest to ${event.name}.`,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -399,7 +456,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
       toast({
         title: userIsGuest ? "Removed as guest." : "Added as guest!",
-        description: `You are ${userIsGuest ? "no longer attending" : "now attending"} ${event.name}.`,
+        description: `You are ${
+          userIsGuest ? "no longer attending" : "now attending"
+        } ${event.name}.`,
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -407,7 +466,9 @@ const EventModal = (eventModalProps: EventModalProps) => {
     } catch (error) {
       toast({
         title: `Could not ${userIsGuest ? "remove" : "add"} you as guest.`,
-        description: `Something went wrong while trying to ${userIsGuest ? "remove" : "add"} you as a guest to ${event.name}.`,
+        description: `Something went wrong while trying to ${
+          userIsGuest ? "remove" : "add"
+        } you as a guest to ${event.name}.`,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -435,7 +496,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
         isClosable: true,
       });
     }
-  }
+  };
 
   const handleClickDelete = async (event: Event) => {
     setIsDeleting(true);
@@ -447,34 +508,38 @@ const EventModal = (eventModalProps: EventModalProps) => {
     refetchEventsTrigger((refetchEvents) => !refetchEvents);
   };
 
-  useEffect(() => {
-    if (id) {
-      if (id === "new") {
-        const locationState = location.state as EventModalLocationState;
+  useEffect(
+    () => {
+      if (id) {
+        if (id === "new") {
+          const locationState = location.state as EventModalLocationState;
 
-        if (locationState) {
-          const { event: newIntegratedEvent } = location.state as EventModalLocationState;
-          setFormState(() => ({
-            ...newIntegratedEvent,
-            type: '',
-            server: '',
-            map: ''
-          }));
-          setEvent(null);
-          setIsViewingAsUser(false);
+          if (locationState) {
+            const { event: newIntegratedEvent } =
+              location.state as EventModalLocationState;
+            setFormState(() => ({
+              ...newIntegratedEvent,
+              type: "",
+              server: "",
+              map: "",
+            }));
+            setEvent(null);
+            setIsViewingAsUser(false);
+          }
+        } else {
+          (async () => {
+            setIsLoadingEvent(true);
+
+            // Comment for demo purposes
+            // const event = await getEvent(parseInt(id));
+            const event = DEMO_EVENTS.find((event) => event.id === id);
+            setEvent(event ?? DEMO_EVENTS[0]);
+
+            setIsLoadingEvent(false);
+          })();
         }
-      } else {
-        (async () => {
-          setIsLoadingEvent(true);
-
-          const event = await getEvent(parseInt(id));
-          setEvent(event);
-
-          setIsLoadingEvent(false);
-        })();
       }
-    }
-  },
+    },
 
     // Disable location.state missing from dependency array warning because it breaks the viewing of integrated events.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -510,7 +575,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
         adultOnly: event.adultOnly,
 
         // TREASURE MAPS
-        treasureMaps: event.treasureMaps
+        treasureMaps: event.treasureMaps,
       });
     } else if (!(id === "new")) {
       setFormState(INITIAL_FORM_STATE);
@@ -526,10 +591,8 @@ const EventModal = (eventModalProps: EventModalProps) => {
     >
       <ModalOverlay />
 
-      <ModalContent
-        bgColor={eventPalette.eventBgColor}
-      >
-        {isLoadingEvent ?
+      <ModalContent bgColor={eventPalette.eventBgColor}>
+        {isLoadingEvent ? (
           <>
             <ModalHeader />
 
@@ -541,13 +604,13 @@ const EventModal = (eventModalProps: EventModalProps) => {
 
             <ModalFooter />
           </>
-          :
+        ) : (
           <>
             <ModalHeader>
               <Flex
                 direction={{
                   base: "column",
-                  sm: "row"
+                  sm: "row",
                 }}
                 justifyContent="space-between"
                 alignItems="flex-start"
@@ -558,10 +621,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   value={formState.name}
                   setValue={(newName) => {
                     if (newName.length < 64)
-                      setFormState(formState => ({
+                      setFormState((formState) => ({
                         ...formState,
-                        name: newName
-                      }))
+                        name: newName,
+                      }));
                   }}
                   eventPalette={eventPalette}
                 />
@@ -569,20 +632,22 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 <Box
                   ml={{
                     base: 0,
-                    sm: 3
+                    sm: 3,
                   }}
                   mt={{
                     base: 2,
-                    sm: 0
+                    sm: 0,
                   }}
                 >
                   <CustomizationField
                     isEditable={isEditable}
                     palette={formState.palette}
-                    setPalette={(newValue) => setFormState(formState => ({
-                      ...formState,
-                      palette: newValue
-                    }))}
+                    setPalette={(newValue) =>
+                      setFormState((formState) => ({
+                        ...formState,
+                        palette: newValue,
+                      }))
+                    }
                   />
                 </Box>
 
@@ -590,20 +655,18 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   hidden={!userIsHost && !eventsDetailModalNewMatch}
                   ml={{
                     base: 0,
-                    sm: 3
+                    sm: 3,
                   }}
                   mt={{
                     base: 2,
-                    sm: 0
+                    sm: 0,
                   }}
                 >
                   <Tooltip
                     label={
                       isViewingAsUser
-                        ?
-                        "Make changes to this event"
-                        :
-                        "View a draft of your changes. You will still need to click Update to save any changes after viewing the draft."
+                        ? "Make changes to this event"
+                        : "View a draft of your changes. You will still need to click Update to save any changes after viewing the draft."
                     }
                   >
                     <Button
@@ -622,25 +685,25 @@ const EventModal = (eventModalProps: EventModalProps) => {
               <Flex
                 mt={{
                   base: 1,
-                  sm: 2
+                  sm: 2,
                 }}
                 direction={{
                   base: "column",
-                  sm: "row"
+                  sm: "row",
                 }}
                 justifyContent={{
                   base: "flex-start",
-                  sm: "space-between"
+                  sm: "space-between",
                 }}
                 alignItems={{
                   base: "flex-start",
-                  sm: "flex-start"
+                  sm: "flex-start",
                 }}
               >
                 <Flex
                   width={{
                     base: "100%",
-                    sm: "33%"
+                    sm: "33%",
                   }}
                   justifyContent="flex-start"
                 >
@@ -651,10 +714,10 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     placeholder="Select event type"
                     value={formState.type}
                     setValue={(newType) => {
-                      setFormState(formState => ({
+                      setFormState((formState) => ({
                         ...formState,
-                        type: newType
-                      }))
+                        type: newType,
+                      }));
                     }}
                     icon={MdHelpOutline}
                   >
@@ -670,19 +733,19 @@ const EventModal = (eventModalProps: EventModalProps) => {
                 <Flex
                   ml={{
                     base: 0,
-                    sm: 3
+                    sm: 3,
                   }}
                   mt={{
                     base: 2,
-                    sm: 0
+                    sm: 0,
                   }}
                   width={{
                     base: "100%",
-                    sm: "33%"
+                    sm: "33%",
                   }}
                   justifyContent={{
                     base: "flex-start",
-                    sm: "center"
+                    sm: "center",
                   }}
                 >
                   <SelectField
@@ -691,15 +754,20 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     placeholder="Select server"
                     value={formState.server}
                     setValue={(newServer) => {
-                      setFormState(formState => ({
+                      setFormState((formState) => ({
                         ...formState,
-                        server: newServer
-                      }))
+                        server: newServer,
+                      }));
                     }}
                     icon={MdPublic}
                   >
                     {worldServers
-                      .sort((worldServerA: WorldServer, worldServerB: WorldServer) => worldServerA.name > worldServerB.name ? 1 : -1)
+                      .sort(
+                        (
+                          worldServerA: WorldServer,
+                          worldServerB: WorldServer
+                        ) => (worldServerA.name > worldServerB.name ? 1 : -1)
+                      )
                       .map((worldServer, index) => (
                         <option value={worldServer.name} key={index}>
                           {worldServer.name}
@@ -713,63 +781,68 @@ const EventModal = (eventModalProps: EventModalProps) => {
                   direction="column"
                   ml={{
                     base: 0,
-                    sm: 3
+                    sm: 3,
                   }}
                   mt={{
                     base: 2,
-                    sm: 0
+                    sm: 0,
                   }}
                   width={{
                     base: "100%",
-                    sm: "33%"
+                    sm: "33%",
                   }}
                   alignItems={{
                     base: "flex-start",
-                    sm: "flex-end"
+                    sm: "flex-end",
                   }}
                 >
                   <SelectField
                     isEditable={isEditable}
                     eventPalette={eventPalette}
                     placeholder="Select map"
-                    value={hasSelectedHousingDistrict ? (isEditable ? formState.map : `${formState.map} - W${formState.ward} P${formState.plot}`) : formState.map}
+                    value={
+                      hasSelectedHousingDistrict
+                        ? isEditable
+                          ? formState.map
+                          : `${formState.map} - W${formState.ward} P${formState.plot}`
+                        : formState.map
+                    }
                     setValue={(newMap) => {
-                      setFormState(formState => ({
+                      setFormState((formState) => ({
                         ...formState,
-                        map: newMap
-                      }))
+                        map: newMap,
+                      }));
                     }}
                     icon={MdLocationOn}
                   >
                     {/* Sort housing districts first */}
                     {[
-                      ...maps.filter(map => isHousingDistrict(map)),
-                      ...maps.filter(map => !isHousingDistrict(map))
-                    ]
-                      .map((map, index) => (
-                        <option value={map} key={index}>
-                          {map}
-                        </option>
-                      ))}
+                      ...maps.filter((map) => isHousingDistrict(map)),
+                      ...maps.filter((map) => !isHousingDistrict(map)),
+                    ].map((map, index) => (
+                      <option value={map} key={index}>
+                        {map}
+                      </option>
+                    ))}
                   </SelectField>
 
-                  {isEditable && hasSelectedHousingDistrict &&
+                  {isEditable && hasSelectedHousingDistrict && (
                     <Flex
                       mt={{
                         base: 2,
-                        sm: 3
+                        sm: 3,
                       }}
                       direction="row"
                       justifyContent={{
                         base: "flex-start",
-                        sm: "center"
+                        sm: "center",
                       }}
                       borderWidth={1}
                       borderRadius="lg"
                       px={3}
                       py={{
                         base: 2,
-                        sm: 2
+                        sm: 2,
                       }}
                       {...eventPalette.fieldStyles}
                     >
@@ -782,18 +855,15 @@ const EventModal = (eventModalProps: EventModalProps) => {
                         setValue={(newWard) =>
                           setFormState((formState) => ({
                             ...formState,
-                            ward: newWard
-                          }))}
+                            ward: newWard,
+                          }))
+                        }
                         min={1}
                         max={24}
                       />
 
                       {/* PLOT */}
-                      <Flex
-                        direction="row"
-                        alignItems="center"
-                        ml={3}
-                      >
+                      <Flex direction="row" alignItems="center" ml={3}>
                         <NumberField
                           isEditable={isEditable}
                           fieldStyles={eventPalette.nestedFieldStyles}
@@ -802,28 +872,29 @@ const EventModal = (eventModalProps: EventModalProps) => {
                           setValue={(newPlot) =>
                             setFormState((formState) => ({
                               ...formState,
-                              plot: newPlot
-                            }))}
+                              plot: newPlot,
+                            }))
+                          }
                           min={1}
                           max={60}
                         />
                       </Flex>
                     </Flex>
-                  }
+                  )}
                 </Flex>
               </Flex>
 
               <Box
                 mt={{
                   base: 2,
-                  sm: 3
+                  sm: 3,
                 }}
                 borderWidth={1}
                 borderRadius="lg"
                 px={3}
                 py={{
                   base: 2,
-                  sm: 2
+                  sm: 2,
                 }}
                 {...eventPalette.fieldStyles}
               >
@@ -836,129 +907,137 @@ const EventModal = (eventModalProps: EventModalProps) => {
               </Box>
 
               {/* EVENT TYPE SPECIFIC INFO */}
-              {formState.type &&
+              {formState.type && (
                 <EventTypeInfo
                   isEditable={isEditable}
                   user={user}
                   eventPalette={eventPalette}
                   formState={formState}
                   setFormState={setFormState}
-                  attendRoleSlot={(roleSlotId) => event && handleClickRoleSlot(event, roleSlotId)}
+                  attendRoleSlot={(roleSlotId) =>
+                    event && handleClickRoleSlot(event, roleSlotId)
+                  }
                   treasureMaps={treasureMaps}
                   classes={classes}
                 />
-              }
+              )}
 
               {/* WEBSITE */}
-              {isEditable ?
+              {isEditable ? (
                 <Box
                   mt={{
                     base: 2,
-                    sm: 3
+                    sm: 3,
                   }}
                 >
                   <LinkField
                     eventPalette={eventPalette}
                     placeholder={"Enter website link (optional)"}
                     value={formState.website}
-                    setValue={(value) => setFormState((formState) => ({
-                      ...formState,
-                      website: value
-                    }))}
+                    setValue={(value) =>
+                      setFormState((formState) => ({
+                        ...formState,
+                        website: value,
+                      }))
+                    }
                   />
                 </Box>
-                :
-                formState.website &&
-                <Box
-                  mt={6}
-                >
-                  <FormLabel
-                    fontSize="sm"
-                    fontWeight="bold"
-                    color={eventPalette.fieldStyles.color}
-                  >
-                    Website
-                  </FormLabel>
-                  <Flex
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    borderRadius="lg"
-                    {...eventPalette.fieldStyles}
-                  >
-                    <Link
-                      href={formState.website}
-                      isExternal
-                      ml={4}
-                      my={2}
-                      overflow="hidden"
-                      whiteSpace="nowrap"
-                      textOverflow="ellipsis"
+              ) : (
+                formState.website && (
+                  <Box mt={6}>
+                    <FormLabel
+                      fontSize="sm"
+                      fontWeight="bold"
+                      color={eventPalette.fieldStyles.color}
                     >
-                      <LinkIcon mr={2} />
+                      Website
+                    </FormLabel>
+                    <Flex
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      borderRadius="lg"
+                      {...eventPalette.fieldStyles}
+                    >
+                      <Link
+                        href={formState.website}
+                        isExternal
+                        ml={4}
+                        my={2}
+                        overflow="hidden"
+                        whiteSpace="nowrap"
+                        textOverflow="ellipsis"
+                      >
+                        <LinkIcon mr={2} />
 
-                      {formState.website}
-                    </Link>
-                  </Flex>
-                </Box>
-              }
-
+                        {formState.website}
+                      </Link>
+                    </Flex>
+                  </Box>
+                )
+              )}
 
               {/* VIDEO */}
-              {isEditable ?
-                <Box mt={{
-                  base: 2,
-                  sm: 3
-                }}>
+              {isEditable ? (
+                <Box
+                  mt={{
+                    base: 2,
+                    sm: 3,
+                  }}
+                >
                   <LinkField
                     eventPalette={eventPalette}
                     placeholder={"Enter video/livestream link (optional)"}
                     value={formState.video}
-                    setValue={(value) => setFormState((formState) => ({
-                      ...formState,
-                      video: value
-                    }))}
-                  />
-                </Box>
-                :
-                formState.video &&
-                <Box
-                  mb={9} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
-                  width="100%"
-                  paddingTop="56.25%"
-                  position="relative"
-                >
-                  <ReactPlayer
-                    url={formState.video}
-                    wrapper={Box}
-                    mt={3}
-                    overflow="hidden" // Needed for border radius to work
-                    borderRadius="lg"
-                    height="100%"
-                    width="100%"
-                    position="absolute"
-                    top={0}
-                    left={0}
-                    bottom={0}
-                    right={0}
-                    fallback={
-                      <Center
-                        height="100%"
-                        width="100%"
-                        borderWidth={1}
-                        borderRadius="lg"
-                      >
-                        <CircularProgress isIndeterminate color={COLORS.GREY_LIGHT} />
-                      </Center>
+                    setValue={(value) =>
+                      setFormState((formState) => ({
+                        ...formState,
+                        video: value,
+                      }))
                     }
                   />
                 </Box>
-              }
+              ) : (
+                formState.video && (
+                  <Box
+                    mb={9} // Bottom margin because otherwise the ReactPlayer messes up the bottom margin
+                    width="100%"
+                    paddingTop="56.25%"
+                    position="relative"
+                  >
+                    <ReactPlayer
+                      url={formState.video}
+                      wrapper={Box}
+                      mt={3}
+                      overflow="hidden" // Needed for border radius to work
+                      borderRadius="lg"
+                      height="100%"
+                      width="100%"
+                      position="absolute"
+                      top={0}
+                      left={0}
+                      bottom={0}
+                      right={0}
+                      fallback={
+                        <Center
+                          height="100%"
+                          width="100%"
+                          borderWidth={1}
+                          borderRadius="lg"
+                        >
+                          <CircularProgress
+                            isIndeterminate
+                            color={COLORS.GREY_LIGHT}
+                          />
+                        </Center>
+                      }
+                    />
+                  </Box>
+                )
+              )}
 
               {/* DESCRIPTION */}
-              <Box
-                mt={6}
-              >
+              <Box mt={6}>
                 <FormLabel
                   fontSize="sm"
                   fontWeight="bold"
@@ -975,7 +1054,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     if (newDescription.length < 1000) {
                       setFormState((formState) => ({
                         ...formState,
-                        description: newDescription
+                        description: newDescription,
                       }));
                     }
                   }}
@@ -983,11 +1062,11 @@ const EventModal = (eventModalProps: EventModalProps) => {
               </Box>
 
               {/* BACKGROUND IMAGE */}
-              {isEditable &&
+              {isEditable && (
                 <Box
                   mt={{
                     base: 2,
-                    sm: 3
+                    sm: 3,
                   }}
                 >
                   <FileUploadField
@@ -998,19 +1077,27 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     acceptedFileTypes=".png, .jpg, .jpeg"
                   />
                 </Box>
-              }
+              )}
 
               {/* HOST & GUESTS */}
-              {event && !isEditable &&
-                <Flex mt={6} direction="row" justifyContent="space-evenly" alignItems="center">
-                  {event.host &&
-                    <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
+              {event && !isEditable && (
+                <Flex
+                  mt={6}
+                  direction="row"
+                  justifyContent="space-evenly"
+                  alignItems="center"
+                >
+                  {event.host && (
+                    <Stat
+                      color={eventPalette.fieldStyles.color}
+                      maxWidth="fit-content"
+                    >
                       <StatLabel textAlign="center">Host</StatLabel>
                       <StatNumber>
                         <AvatarGroup
                           size={{
                             base: "sm",
-                            sm: "md"
+                            sm: "md",
                           }}
                           justifyContent="center"
                         >
@@ -1024,16 +1111,19 @@ const EventModal = (eventModalProps: EventModalProps) => {
                       </StatNumber>
                       <StatHelpText textAlign="center">1 host</StatHelpText>
                     </Stat>
-                  }
+                  )}
 
-                  {event.guests &&
-                    <Stat color={eventPalette.fieldStyles.color} maxWidth="fit-content">
+                  {event.guests && (
+                    <Stat
+                      color={eventPalette.fieldStyles.color}
+                      maxWidth="fit-content"
+                    >
                       <StatLabel textAlign="center">Guests</StatLabel>
                       <StatNumber>
                         <AvatarGroup
                           size={{
                             base: "sm",
-                            sm: "md"
+                            sm: "md",
                           }}
                           justifyContent="center"
                           max={3}
@@ -1049,17 +1139,20 @@ const EventModal = (eventModalProps: EventModalProps) => {
                           ))}
                         </AvatarGroup>
                       </StatNumber>
-                      <StatHelpText textAlign="center">{event.guests.length} {event.guests.length > 1 || event.guests.length === 0 ? "guests" : "guest"}</StatHelpText>
+                      <StatHelpText textAlign="center">
+                        {event.guests.length}{" "}
+                        {event.guests.length > 1 || event.guests.length === 0
+                          ? "guests"
+                          : "guest"}
+                      </StatHelpText>
                     </Stat>
-                  }
+                  )}
                 </Flex>
-              }
+              )}
 
               {/* COMMENTS */}
-              {event && !isEditable &&
-                <FormControl
-                  mt={6}
-                >
+              {event && !isEditable && (
+                <FormControl mt={6}>
                   <FormLabel
                     fontSize="sm"
                     fontWeight="bold"
@@ -1075,13 +1168,11 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     setEvent={setEvent}
                   />
                 </FormControl>
-              }
+              )}
 
               {/* SHARE */}
-              {event && !isEditable &&
-                <FormControl
-                  mt={6}
-                >
+              {event && !isEditable && (
+                <FormControl mt={6}>
                   <FormLabel
                     fontSize="sm"
                     fontWeight="bold"
@@ -1122,71 +1213,75 @@ const EventModal = (eventModalProps: EventModalProps) => {
                     </Button>
                   </Flex>
                 </FormControl>
-              }
+              )}
             </ModalBody>
 
             <ModalFooter>
               <Flex direction="column" alignItems="flex-end" width="100%">
-                {user ?
-                  (
-                    isEditable ?
-                      <Flex
-                        direction="row"
-                        justifyContent={event ? "space-between" : "flex-end"}
-                        width="100%"
-                      >
-                        {event &&
-                          <Button
-                            onClick={() => handleClickDelete(event)}
-                            isLoading={isDeleting}
-                            loadingText="Deleting"
-                            colorScheme="red"
-                            width="fit-content"
-                          >
-                            Delete
-                          </Button>
-                        }
+                {user ? (
+                  isEditable ? (
+                    <Flex
+                      direction="row"
+                      justifyContent={event ? "space-between" : "flex-end"}
+                      width="100%"
+                    >
+                      {event && (
+                        <Button
+                          onClick={() => handleClickDelete(event)}
+                          isLoading={isDeleting}
+                          loadingText="Deleting"
+                          colorScheme="red"
+                          width="fit-content"
+                        >
+                          Delete
+                        </Button>
+                      )}
 
-                        <Box>
-                          <Button
-                            variant="ghost"
-                            onClick={closeModal}
-                            mr={3}
-                            colorScheme={eventPalette.buttonColorScheme}
-                            width="fit-content"
-                          >
-                            {event ? "Cancel" : "Discard"}
-                          </Button>
+                      <Box>
+                        <Button
+                          variant="ghost"
+                          onClick={closeModal}
+                          mr={3}
+                          colorScheme={eventPalette.buttonColorScheme}
+                          width="fit-content"
+                        >
+                          {event ? "Cancel" : "Discard"}
+                        </Button>
 
-                          <Button
-                            onClick={handleClickCreateUpdate}
-                            isDisabled={!isFormStateValid}
-                            isLoading={isSaving}
-                            loadingText={event ? "Updating" : "Creating"}
-                            colorScheme={eventPalette.buttonColorScheme}
-                            width="fit-content"
-                          >
-                            {event ? "Update" : "Create"}
-                          </Button>
-                        </Box>
-                      </Flex>
-                      :
-                      event && !userIsHost &&
+                        <Button
+                          onClick={handleClickCreateUpdate}
+                          isDisabled={!isFormStateValid}
+                          isLoading={isSaving}
+                          loadingText={event ? "Updating" : "Creating"}
+                          colorScheme={eventPalette.buttonColorScheme}
+                          width="fit-content"
+                        >
+                          {event ? "Update" : "Create"}
+                        </Button>
+                      </Box>
+                    </Flex>
+                  ) : (
+                    event &&
+                    !userIsHost && (
                       <Button
-                        leftIcon={userIsGuest ? <CheckIcon /> : <PlusSquareIcon />}
+                        leftIcon={
+                          userIsGuest ? <CheckIcon /> : <PlusSquareIcon />
+                        }
                         onClick={() => handleClickAttend(user, event)}
                         isLoading={isSaving}
                         loadingText={userIsGuest ? "Removing" : "Attending"}
-                        colorScheme={userIsGuest ? "green" : eventPalette.buttonColorScheme}
+                        colorScheme={
+                          userIsGuest ? "green" : eventPalette.buttonColorScheme
+                        }
                         width="fit-content"
                       >
                         {userIsGuest ? "Attending" : "Attend"}
                       </Button>
-
+                    )
                   )
-                  :
+                ) : (
                   <Flex direction="row" justifyContent="flex-end" width="100%">
-                    {eventsDetailModalNewMatch ?
+                    {eventsDetailModalNewMatch ? (
                       <Button
                         leftIcon={<LockIcon />}
                         isDisabled
@@ -1195,7 +1290,7 @@ const EventModal = (eventModalProps: EventModalProps) => {
                       >
                         Sign in to create an event
                       </Button>
-                      :
+                    ) : (
                       <Button
                         leftIcon={<LockIcon />}
                         isDisabled
@@ -1203,24 +1298,27 @@ const EventModal = (eventModalProps: EventModalProps) => {
                         width="fit-content"
                       >
                         Sign in to mark yourself as guest
-                      </Button>}
+                      </Button>
+                    )}
                   </Flex>
-                }
+                )}
 
-                {user && isEditable && !isFormStateValid &&
-                  <Box
-                    mt={3}
-                    color="red"
-                  >
+                {user && isEditable && !isFormStateValid && (
+                  <Box mt={3} color="red">
                     <InfoText
-                      text={formStateValidations.filter(formStateValidation => formStateValidation.condition !== true)[0].text}
+                      text={
+                        formStateValidations.filter(
+                          (formStateValidation) =>
+                            formStateValidation.condition !== true
+                        )[0].text
+                      }
                     />
                   </Box>
-                }
+                )}
               </Flex>
             </ModalFooter>
           </>
-        }
+        )}
       </ModalContent>
     </Modal>
   );

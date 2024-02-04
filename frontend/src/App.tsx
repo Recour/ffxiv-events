@@ -22,6 +22,7 @@ import EventsCalendar from "./components/events-page/events-calendar/EventsCalen
 import "focus-visible/dist/focus-visible";
 import { useMeasure } from "react-use";
 import { Class } from "./types/Class";
+import { DEMO_USER } from "./consts/demo";
 
 const XIVAPI = require("@xivapi/js");
 
@@ -72,8 +73,10 @@ const App = () => {
     (async () => {
       setLoadingQueue((loadingQueue) => loadingQueue + 1);
 
-      const user = await getUser();
-      setUser(user);
+      // Comment for demo purposes
+      // const user = await getUser();
+      // setUser(user);
+      setUser(DEMO_USER)
 
       setLoadingQueue((loadingQueue) => loadingQueue - 1);
     })();

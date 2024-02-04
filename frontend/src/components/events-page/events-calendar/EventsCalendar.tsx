@@ -7,6 +7,7 @@ import { EVENT_TABLE_COLUMNS } from "../../../types/EventTableColumn";
 import { User } from "../../../types/User";
 import EventTable from "../../landing-page/EventTable";
 import { SORT_DIRECTIONS, SORT_OPTIONS } from "../filters/SortMenu";
+import { DEMO_EVENTS } from "../../../consts/demo";
 
 const EVENTS_CALENDAR_LIMIT = 100;
 
@@ -44,19 +45,19 @@ const EventsCalendar = (eventsCalendarProps: EventsCalendarProps) => {
             filters.hostId = user.id;
           }
 
-          const { rows } = await getEvents(
-            EVENTS_CALENDAR_LIMIT,
-            0,
-            SORT_OPTIONS.START_TIME.value,
-            SORT_DIRECTIONS.ASCENDING,
-            filters,
-            false,
-            false,
-            (type === "attending"),
-            {}
-          );
-
-          setEvents(rows);
+          // Comment for demo purposes
+          // const { rows } = await getEvents(
+          //   EVENTS_CALENDAR_LIMIT,
+          //   0,
+          //   SORT_OPTIONS.START_TIME.value,
+          //   SORT_DIRECTIONS.ASCENDING,
+          //   filters,
+          //   false,
+          //   false,
+          //   (type === "attending"),
+          //   {}
+          // );
+          setEvents(DEMO_EVENTS);
         } catch (error) {
           throw new Error(`${error}`);
         } finally {
