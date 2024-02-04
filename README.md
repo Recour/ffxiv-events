@@ -11,6 +11,11 @@ Event sharing tool for FFXIV. Share social events, raids and more.
 
 https://ffxiv-events-frontend.onrender.com/
 
+## XIVAPI
+
+This project uses XIVAPI to fetch game worlds, game servers, player maps, player classes and more.
+Check them out here: [xivapi.com](https://xivapi.com/).
+
 ## Repository
 
 This repository hosts the FFXIV Events frontend and backend. Frontend code can be found in the ```frontend``` folder, while backend code can be found in the ```backend``` folder.
